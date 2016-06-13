@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+        <meta http-equiv="Content-Security-Policy" content="default-src &apos;self&apos; data: gap: https://ssl.gstatic.com &apos;unsafe-eval&apos;; style-src &apos;self&apos; &apos;unsafe-inline&apos;; media-src *">
+        
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="js/jquery-1.5.0.mobile.min.css">
+		<style>
+		/* For avoiding title truncation in wp8 */
+		.ui-header .ui-title {
+				overflow: visible !important;
+		}
+		/* For fixing the absolute position issue for the default cordova gen page*/
+		#cjp-accordion1 .app {
+				left: 5px !important;
+				margin: 5px !important;
+				position: relative !important;
+		}
+		</style>
+        <title>YoGolf</title>
+    </head>
+    <body>
+		<!-- jquery mobile page 1 -->
+		<div data-role="page" id="start">
+			<div data-role="header">
+				<h1>Start</h1>
+			</div>
+
+			<div role="main" class="ui-content">
+				<p>Page 1 content goes here</p>
+					<a href="#bag">Goto Bag</a>
+			
+		</div>
+			<!-- end of page 1 content -->
+
+			<div data-role="footer" data-position="fixed">
+				<h4>Page 1 Footer</h4>
+			</div>
+			<!-- end page 1 footer -->
+		</div>
+		<!-- end page 1 -->
+
+		<!-- jquery mobile page 2 -->
+		<div data-role="page" id="bag">
+			<div data-role="header">
+				<h1>Bag</h1>
+			</div>
+
+			<div role="main" class="ui-content">
+				<h4>Page 2 content goes here</h4>
+				<a href="#start">Goto start</a>
+			</div>
+			<!-- end of page 2 content -->
+
+			<div data-role="footer" data-position="fixed">
+				<h4>Page 2 Footer</h4>
+			</div>
+			<!-- end page 2 footer -->
+		</div>
+		<!-- end page 2 -->
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/jquery-1.11.1.min.js" id="cordova-jquery"></script>
+        <script type="text/javascript" id="jqm-trans-disable">
+		/* For having a faster transition */
+		    $(document).on("mobileinit", function() {
+				    $.mobile.defaultPageTransition = "none";
+				    $.mobile.defaultDialogTransition = "none";
+		    });
+		</script>
+        <script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js"></script>
+        <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+        <script type="text/javascript" src="scripts/index.js"></script></body>
+</html>

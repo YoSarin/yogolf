@@ -5,24 +5,106 @@
         Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
         For details, see http://go.microsoft.com/fwlink/?LinkID=617521
     -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta http-equiv="Content-Security-Policy" content="default-src &apos;self&apos; data: gap: https://ssl.gstatic.com &apos;unsafe-eval&apos;; style-src &apos;self&apos; &apos;unsafe-inline&apos;; media-src *">
         
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="js/jquery-1.5.0.mobile.min.css">
+		<style>
+		/* For avoiding title truncation in wp8 */
+		.ui-header .ui-title {
+				overflow: visible !important;
+		}
+		/* For fixing the absolute position issue for the default cordova gen page*/
+		#cjp-accordion1 .app {
+				left: 5px !important;
+				margin: 5px !important;
+				position: relative !important;
+		}
+		</style>
         <title>YoGolf</title>
     </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
+<body>
+    <!-- Pages -->
+    <!-- Starting page -->
+    <div data-role="page" id="start">
+        <div data-role="header">
+            <h1>Start</h1>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="scripts/platformOverrides.js"></script>
-        <script type="text/javascript" src="scripts/index.js"></script>
-    </body>
+        <div role="main" class="ui-content">
+            <p>Page 1 content goes here</p>
+            <a href="#bag">Goto Bag</a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Page 1 Footer</h4>
+        </div>
+    </div>
+    
+    <!-- Courses - list of your discs -->
+    <div data-role="page" id="courses">
+        <div data-role="header">
+            <h1>Courses</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <ul>
+
+            </ul>
+            <a href="#start">Goto start</a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Page 2 Footer</h4>
+        </div>
+    </div>
+    
+    <!-- Bag - list of your discs -->
+    <div data-role="page" id="bag">
+        <div data-role="header">
+            <h1>Bag</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <h4>Page 2 content goes here</h4>
+            <a href="#start">Goto start</a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Page 2 Footer</h4>
+        </div>
+    </div>
+
+    <!-- Error -->
+    <div data-role="page" id="error">
+        <div data-role="header">
+            <h1>Error</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <h4 class="error-message"></h4>
+            <div>Try to close and reopen application, if it helps</div>
+            <small class="address"></small>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Sorry for that :(</h4>
+        </div>
+    </div>
+    <!-- Scripts goes under this -->
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js" id="cordova-jquery"></script>
+    <script type="text/javascript" id="jqm-trans-disable">
+		/* For having a faster transition */
+		    $(document).on("mobileinit", function() {
+				    $.mobile.defaultPageTransition = "none";
+				    $.mobile.defaultDialogTransition = "none";
+		    });
+    </script>
+    <script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js"></script>
+    <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+    <script type="text/javascript" src="scripts/index.js"></script>
+    <script type="text/javascript" src="scripts/view.js"></script>
+    <script type="text/javascript" src="scripts/model/disc.js"></script>
+    <script type="text/javascript" src="scripts/model/course.js"></script>
+    <script type="text/javascript" src="scripts/model/player.js"></script>
+    <script type="text/javascript" src="scripts/model/database.js"></script>
+    <script type="text/javascript" src="scripts/model/yogolf.js"></script>
+</body>
+</body>
 </html>
