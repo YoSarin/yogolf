@@ -22,8 +22,30 @@ var App;
         });
 
         var options = { enableHighAccuracy: true };
-        navigator.geolocation.getCurrentPosition(function (position) { console.log(position); }, function (error) { console.log(error); }, options);
+        navigator.compass.watchHeading(
+            function (heading) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        $(".distance").each(function (key, item) {
+                            var coords = $(item).attr("coords").split(",");
+                            var c = new Coord(position.coords.latitude, position.coords.longitude);
+                            // var c = new Coord(50.0215556, 14.2284575);
+                            var itemCoord = new Coord(parseFloat(coords[0]), parseFloat(coords[1]));
+                            $(item).text(Math.round(c.distanceTo(itemCoord)));
+                            var direction = Math.round(heading.trueHeading - c.directionTo(itemCoord)) % 360;
+
+                            View.HeadingArrow(direction, $(item).closest(".description").find(".compass"));
+                        });
+                    },
+                    function (error) { console.log(error); },
+                    options
+                );
+            },
+            function (error) { console.log(error); },
+            { frequency: 200 }
+        );
         
+        Coord.Test();
     };
 
     function onPause() {

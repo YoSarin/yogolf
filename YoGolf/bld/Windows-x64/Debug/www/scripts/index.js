@@ -23,7 +23,9 @@ var App;
 
         var options = { enableHighAccuracy: true };
         navigator.geolocation.getCurrentPosition(function (position) { console.log(position); }, function (error) { console.log(error); }, options);
+        navigator.compass.watchHeading(function (heading) { console.log(heading); }, function (error) { console.log(error); }, {frequency: 2000});
         
+        Coord.Test();
     };
 
     function onPause() {

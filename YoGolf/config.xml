@@ -108,4 +108,6 @@
   </platform>
   <plugin name="cordova-sqlite-storage" version="1.4.1" src="https://github.com/litehelpers/Cordova-sqlite-storage" />
   <plugin name="cordova-plugin-geolocation" version="2.2.0" />
+  <plugin name="cordova-plugin-compat" version="1.0.0" />
+  <plugin name="cordova-plugin-device-orientation" version="1.0.4-dev" src="https://github.com/apache/cordova-plugin-device-orientation" />
 </widget>

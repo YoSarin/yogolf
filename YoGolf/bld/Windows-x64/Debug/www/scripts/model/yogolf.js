@@ -11,8 +11,9 @@ YoGolf.prototype = {
 
 function Panic(message) {
     $(':mobile-pagecontainer').pagecontainer('change', $('#error'));
-    $("#error .error-message").text(message);
-    $("#error .address").text(calledFrom());
+    $("#error .error-list").append(
+        $('<ul>').text(message).append('<br />').append($('<small>').text(calledFrom()))
+    );
 }
 
 function calledFrom() {
