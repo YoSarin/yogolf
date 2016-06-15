@@ -6,6 +6,9 @@
 Coord.EarthRadius = 6371e3; // metres
 
 Coord.prototype = {
+    toString:function() {
+        return this.latitude + ',' + this.longitude;
+    },
     latDistanceTo: function (otherCoord) {
         return Math.tan((otherCoord.latitude.toRad() - this.latitude.toRad()) / 2) * 2 * Coord.EarthRadius;
     },

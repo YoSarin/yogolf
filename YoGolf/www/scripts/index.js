@@ -26,15 +26,18 @@ var App;
             function (heading) {
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
-                        $(".distance").each(function (key, item) {
+                        $(".showDistance, .showCompass").each(function (key, item) {
                             var coords = $(item).attr("coords").split(",");
                             var c = new Coord(position.coords.latitude, position.coords.longitude);
                             // var c = new Coord(50.0215556, 14.2284575);
                             var itemCoord = new Coord(parseFloat(coords[0]), parseFloat(coords[1]));
-                            $(item).text(Math.round(c.distanceTo(itemCoord)));
-                            var direction = Math.round(heading.trueHeading - c.directionTo(itemCoord)) % 360;
-
-                            View.HeadingArrow(direction, $(item).closest(".description").find(".compass"));
+                            if ($(item).hasClass('showDistance')) {
+                                $(item).find(".distance").text(Math.round(c.distanceTo(itemCoord)));
+                            }
+                            if ($(item).hasClass('showCompass')) {
+                                var direction = Math.round(heading.trueHeading - c.directionTo(itemCoord)) % 360;
+                                View.HeadingArrow(direction, $(item).find(".compass"));
+                            }
                         });
                     },
                     function (error) { console.log(error); },
@@ -42,7 +45,7 @@ var App;
                 );
             },
             function (error) { console.log(error); },
-            { frequency: 200 }
+            { frequency: 500 }
         );
         
         Coord.Test();

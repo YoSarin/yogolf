@@ -33,6 +33,10 @@ Course.prototype = {
                 function (error) { Panic(error.message); }
             );
         }
+    },
+
+    coord: function () {
+        return new Coord(this.latitude, this.longitude);
     }
 }
 
@@ -91,7 +95,7 @@ Layout.prototype = {
         Path.LoadForLayout(tx, this, function (path) { __self__.paths.push(path); });
     },
     describePaths: function () {
-        return this.paths.map(function (path) { return '<div class="description">' + path.describe() + '</div>'; }).join("\n");
+        return this.paths.map(function (path) { return '<div class="description" coords="' + path.tee.coord().toString() + '">' + path.describe() + '</div>'; }).join("\n");
     },
     describe: function () {
         return this.name + ': ' + this.paths.length + ' holes | par ' + this.par() + ' | ' + this.length().toFixed(0) + ' meters';
@@ -147,7 +151,7 @@ Path.prototype = {
         return this.tee.coord().distanceTo(this.basket.coord())
     },
     describe: function () {
-        return '[' + this.number + '] ' + this.tee.name + ' ➟ ' + this.basket.name + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters | <span class="distance" coords="' + this.tee.describe() + '"></span>';
+        return '[' + this.number + '] ' + this.tee.name + ' ➟ ' + this.basket.name + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters | <span class="showCompass showDistance" coords="' + this.tee.coord().toString() + '"><span class="distance"></span></span>';
     }
 }
 

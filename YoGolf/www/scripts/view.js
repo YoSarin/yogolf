@@ -7,14 +7,15 @@ View.Courses = function (db) {
             var path = course.layouts.map(function (layout) { return layout.describe() + layout.describePaths(); }).join('</li><li>');
             var layouts = $('<li>' + path + '</li>');
             $('#courses .content')
-                .append($('<h2>').text(course.name))
+                .append($('<h2 class="showCompass" coords="' + course.coord().toString() + '">').text(course.name))
                 .append($('<ul>').append(layouts))
         });
-        $(".distance").each(function (k, item) {
-            $(item).closest('.description').append($("#templates .compass").clone());
+        $(".showCompass").each(function (k, item) {
+            $(item).append($("#templates .compass").clone());
         });
     });
 }
+
 View.HeadingArrow = function (direction, svg) {
     var angleInRadians = -1*((direction + 90) % 360).toRad();
     var radius = 10;

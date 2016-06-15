@@ -82,6 +82,19 @@
                 "INSERT INTO path (number, layout, tee, basket, par) VALUES (8, 2, 7, 2, 3);",
                 "INSERT INTO path (number, layout, tee, basket, par) VALUES (9, 2, 2, 8, 3);",
                 "INSERT INTO path (number, layout, tee, basket, par) VALUES (10, 2, 9, 4, 3);",
+
+                "INSERT INTO course (name, latitude, longitude) VALUES ('Eden', 50.0669067, 14.4734086);",
+                "INSERT INTO tee (name, latitude, longitude) VALUES ('Tee 1', 50.0669533, 14.4735361);",
+                "INSERT INTO tee (name, latitude, longitude) VALUES ('Tee 2', 50.0663886, 14.4733725);",
+                "INSERT INTO tee (name, latitude, longitude) VALUES ('Tee 3', 50.0666658, 14.4737439);",
+                "INSERT INTO tee (name, latitude, longitude) VALUES ('Tee 4', 50.0669067, 14.4750969);",
+                "INSERT INTO basket (name, latitude, longitude) VALUES ('Basket 1', 50.0669533, 14.4735361);",
+                "INSERT INTO layout (name, course) VALUES ('Rectangle', 2);",
+                "INSERT INTO path (number, layout, tee, basket, par) VALUES (1, 3, 10, 10, 3);",
+                "INSERT INTO path (number, layout, tee, basket, par) VALUES (2, 3, 11, 10, 3);",
+                "INSERT INTO path (number, layout, tee, basket, par) VALUES (3, 3, 12, 10, 3);",
+                "INSERT INTO path (number, layout, tee, basket, par) VALUES (4, 3, 13, 10, 3);",
+
             ],
             function () { console.log("db created"); },
             function (error) { Panic(error.message); }
