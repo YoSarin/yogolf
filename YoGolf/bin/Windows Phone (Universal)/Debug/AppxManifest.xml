@@ -8,7 +8,7 @@
     For more information on package manifest files, see http://go.microsoft.com/fwlink/?LinkID=241727
   -->
   <Identity Name="io.cordova.myappf195f2" Publisher="CN=$username$" Version="1.0.0.0" ProcessorArchitecture="arm" />
-  <mp:PhoneIdentity PhoneProductId="dd662b10-2dc0-11e6-89e7-5f5f7b6b7d82" PhonePublisherId="db093ed5-53b1-45f7-af72-751e8f36ab80" />
+  <mp:PhoneIdentity PhoneProductId="1a4a2c60-32ef-11e6-b1b7-9b036b37031d" PhonePublisherId="db093ed5-53b1-45f7-af72-751e8f36ab80" />
   <Properties>
     <DisplayName>YoGolf</DisplayName>
     <PublisherDisplayName>Apache Cordova Team</PublisherDisplayName>
@@ -65,7 +65,7 @@
     <build:Item Name="VisualStudioEdition" Value="Microsoft Visual Studio Community 2015" />
     <build:Item Name="OperatingSystem" Version="10.0.10586.0 (th2_release.151029-1700)" />
     <build:Item Name="Microsoft.Build.AppxPackage.dll" Version="14.0.25123.0" />
-    <build:Item Name="ProjectGUID" Value="f44148b2-1942-45b8-8a79-09960df5c791" />
+    <build:Item Name="ProjectGUID" Value="31b67a35-9503-4213-857e-f44eb42ae549" />
     <build:Item Name="MakePri.exe" Version="6.3.9600.17336 (winblue.150226-1500)" />
   </build:Metadata>
 </Package>
