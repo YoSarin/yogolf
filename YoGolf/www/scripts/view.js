@@ -16,18 +16,13 @@ View.Courses = function (db) {
                     .append($('<ul class="layouts hidden">').append(layouts))
                 )
         });
-        $(".showCompass").each(function (k, item) {
-            $(item).append($("#templates .compass").clone());
-        });
-        $(".showDistance").each(function (k, item) {
-            $(item).append($('<span class="distance">'));
-        });
         $('#courses .content h2').click(function (event) {
             $(this).closest('div.course').find("ul.layouts").toggleClass("hidden");
         });
         $('#courses .content .layouts li').click(function (event) {
             View.Layout($(this).data("layout"));
         });
+        View.Enrich($("#courses"));
     });
 }
 
@@ -44,11 +39,41 @@ View.Layout = function (layout) {
                 .append($('<span class="showCompass showDistance" coords="' + path.tee.coord().toString() + '"></span>'))
         );
     });
-    $(".showCompass").each(function (k, item) {
+    View.Enrich($("#layout"));
+}
+
+View.Enrich = function (page) {
+    $(page).find(".showCompass").each(function (k, item) {
         $(item).append($("#templates .compass").clone());
     });
-    $(".showDistance").each(function (k, item) {
+    $(page).find(".showDistance").each(function (k, item) {
         $(item).append($('<span class="distance">'));
+    });
+}
+
+View.refreshHeading = function (position, heading) {
+    $(".showCompass").each(function (key, item) {
+        var coords = $(item).attr("coords").split(",");
+        var c = new Coord(position.coords.latitude, position.coords.longitude);
+        // var c = new Coord(50.0215556, 14.2284575);
+        var itemCoord = new Coord(parseFloat(coords[0]), parseFloat(coords[1]));
+        var direction = Math.round(heading.magneticHeading - c.directionTo(itemCoord)) % 360;
+        View.HeadingArrow(direction, $(item).find(".compass"));
+    });
+}
+
+View.refreshDistance = function (position) {
+    $(".showDistance").each(function (key, item) {
+        var coords = $(item).attr("coords").split(",");
+        var c = new Coord(position.coords.latitude, position.coords.longitude);
+        // var c = new Coord(50.0215556, 14.2284575);
+        var itemCoord = new Coord(parseFloat(coords[0]), parseFloat(coords[1]));
+        var distance = Math.round(c.distanceTo(itemCoord));
+        if (distance >= 1000) {
+            $(item).find(".distance").text((Math.round(distance / 100) / 10) + ' km');
+        } else {
+            $(item).find(".distance").text(distance + " m");
+        }
     });
 }
 

@@ -63,9 +63,8 @@ body {
     line-height: 30px;
 }
 
-.description svg {
-    padding: 7px;
-    float: left;
+svg.compass {
+    vertical-align: middle;
 }
 
 .hidden {
@@ -106,6 +105,13 @@ ul.layouts {
 .event.received {
     background-color:#4B946A;
     display:none;
+}
+
+ul li {
+    list-style: none;
+    margin:0px;
+    padding: 5px;
+    clear: both;
 }
 
 @keyframes fade {

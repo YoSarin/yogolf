@@ -40,9 +40,7 @@
         <div data-role="footer" data-position="fixed">
             <h4>Page 1 Footer</h4>
         </div>
-    </div>
-    
-    <!-- Courses - list of your discs -->
+    </div>    <!-- Courses - list of your discs -->
     <div data-role="page" id="courses">
         <div data-role="header">
             <h1>Courses</h1>
@@ -50,6 +48,20 @@
         <div role="main" class="ui-content">
             <div class="content"></div>
             <a href="#start">Goto start</a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Page 2 Footer</h4>
+        </div>
+    </div>
+    
+    <!-- Layout info -->
+    <div data-role="page" id="layout">
+        <div data-role="header">
+            <h1>Layout</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="content"></div>
+            <a href="#courses">Goto Courses</a>
         </div>
         <div data-role="footer" data-position="fixed">
             <h4>Page 2 Footer</h4>
@@ -83,6 +95,12 @@
             <h4>Sorry for that :(</h4>
         </div>
     </div>
+    <div id="templates">
+        <svg class="compass" width="20" height="20">
+            <circle cx="10" cy="10" r="3" stroke="black" stroke-width="1" fill="white" />
+            <line class="pointer" x1="10" y1="10" x2="10" y2="10" style="stroke:rgb(255,0,0);stroke-width:1" />
+        </svg>
+    </div>
     <!-- Scripts goes under this -->
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery-1.11.1.min.js" id="cordova-jquery"></script>
@@ -95,10 +113,10 @@
     </script>
     <script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js"></script>
     <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+    <script type="text/javascript" src="scripts/model/position.js"></script>
     <script type="text/javascript" src="scripts/index.js"></script>
     <script type="text/javascript" src="scripts/view.js"></script>
     <script type="text/javascript" src="scripts/model/disc.js"></script>
-    <script type="text/javascript" src="scripts/model/position.js"></script>
     <script type="text/javascript" src="scripts/model/course.js"></script>
     <script type="text/javascript" src="scripts/model/player.js"></script>
     <script type="text/javascript" src="scripts/model/database.js"></script>

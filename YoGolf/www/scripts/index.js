@@ -20,38 +20,6 @@ var App;
             App = new YoGolf(db);
             App.Courses();
         });
-
-        var options = { enableHighAccuracy: true };
-        navigator.compass.watchHeading(
-            function (heading) {
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        $(".showDistance, .showCompass").each(function (key, item) {
-                            var coords = $(item).attr("coords").split(",");
-                            var c = new Coord(position.coords.latitude, position.coords.longitude);
-                            // var c = new Coord(50.0215556, 14.2284575);
-                            var itemCoord = new Coord(parseFloat(coords[0]), parseFloat(coords[1]));
-                            if ($(item).hasClass('showDistance')) {
-                                var distance = Math.round(c.distanceTo(itemCoord));
-                                if (distance >= 1000) {
-                                    $(item).find(".distance").text((Math.round(distance / 100) / 10) + ' km');
-                                } else {
-                                    $(item).find(".distance").text(distance + " m");
-                                }
-                            }
-                            if ($(item).hasClass('showCompass')) {
-                                var direction = Math.round(heading.magneticHeading - c.directionTo(itemCoord)) % 360;
-                                View.HeadingArrow(direction, $(item).find(".compass"));
-                            }
-                        });
-                    },
-                    function (error) { console.log(error); },
-                    options
-                );
-            },
-            function (error) { console.log(error); },
-            { frequency: 500 }
-        );
         
         Coord.Test();
     };

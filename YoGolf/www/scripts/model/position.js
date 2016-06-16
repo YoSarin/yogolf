@@ -19,12 +19,11 @@ Coord.prototype = {
         // very, very, VERY approximate
         var lat = this.latDistanceTo(otherCoord);
         var long = this.longDistanceTo(otherCoord);
-
         return Math.sqrt(lat * lat + long * long);
     },
     directionTo: function (otherCoord) {
         var direction = Math.atan2(this.longDistanceTo(otherCoord), this.latDistanceTo(otherCoord));
-        direction = 360 * direction / (2*Math.PI);
+        direction = 360 * direction / (2 * Math.PI);
         return direction;
     }
 }

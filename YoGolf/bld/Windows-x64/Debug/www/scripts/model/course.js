@@ -4,7 +4,7 @@ function Course() {
 
     this.rowid = null;
     this.name = null;
-    this.longtitude = null;
+    this.longitude = null;
     this.latitude = null;
     this.layouts = Array();
 }
@@ -20,27 +20,31 @@ Course.prototype = {
         var __self__ = this;
         if (this.rowid == null) {
             App.db.executeSql(
-                "INSERT INTO course (name, longtitude, latitude) VALUES (?, ?, ?);",
-                [this.name, this.longtitude, this.latitude],
+                "INSERT INTO course (name, longitude, latitude) VALUES (?, ?, ?);",
+                [this.name, this.longitude, this.latitude],
                 function (resultSet) { __self__.rowid = resultSet.insertId; },
                 function (error) { Panic(error.message); }
             );
         } else {
             App.db.executeSql(
-                "UPDATE course SET name = ?, longtitude = ?, latitude = ? WHERE rowid = ?;",
-                [this.name, this.longtitude, this.latitude, this.rowid],
+                "UPDATE course SET name = ?, longitude = ?, latitude = ? WHERE rowid = ?;",
+                [this.name, this.longitude, this.latitude, this.rowid],
                 function (resultSet) { console.log(resultSet); },
                 function (error) { Panic(error.message); }
             );
         }
+    },
+
+    coord: function () {
+        return new Coord(this.latitude, this.longitude);
     }
 }
 
-Course.New = function (name, longtitude, latitude) {
+Course.New = function (name, longitude, latitude) {
     var item = new Course();
 
     item.name = name;
-    item.longtitude = longtitude;
+    item.longitude = longitude;
     item.latitude = latitude;
     item.layouts = Array();
 
@@ -60,7 +64,7 @@ Course.WithAll = function (db, callback) {
                         var item = new Course();
                         item.rowid = resultSet.rows.item(k).rowid;
                         item.name = resultSet.rows.item(k).name;
-                        item.longtitude = resultSet.rows.item(k).longtitude;
+                        item.longitude = resultSet.rows.item(k).longitude;
                         item.latitude = resultSet.rows.item(k).latitude;
                         item.Load(tx);
                         courses.push(item);
@@ -91,7 +95,7 @@ Layout.prototype = {
         Path.LoadForLayout(tx, this, function (path) { __self__.paths.push(path); });
     },
     describePaths: function () {
-        return this.paths.map(function (path) { return '<small>' + path.describe() + '</small>'; }).join('<br />');
+        return this.paths.map(function (path) { return '<div class="description" coords="' + path.tee.coord().toString() + '">' + path.describe() + '</div>'; }).join("\n");
     },
     describe: function () {
         return this.name + ': ' + this.paths.length + ' holes | par ' + this.par() + ' | ' + this.length().toFixed(0) + ' meters';
@@ -147,14 +151,14 @@ Path.prototype = {
         return this.tee.coord().distanceTo(this.basket.coord())
     },
     describe: function () {
-        return '#' + this.number + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters';
+        return '[' + this.number + '] ' + this.tee.name + ' ➟ ' + this.basket.name + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters | <span class="showCompass showDistance" coords="' + this.tee.coord().toString() + '"></span>';
     }
 }
 
 
 Path.LoadForLayout = function (tx, layout, callback) {
     tx.executeSql(
-        "SELECT rowid, * FROM path WHERE layout = ?;",
+        "SELECT rowid, * FROM path WHERE layout = ? ORDER BY number ASC;",
         [layout.rowid],
         function (tx, resultSet) {
             var paths = Array();
@@ -175,20 +179,20 @@ Path.LoadForLayout = function (tx, layout, callback) {
     );
 }
 
-function Tee(name, longtitude, latitude) {
+function Tee(name, latitude, longitude) {
     var __self__ = this;
 
     this.name = name
-    this.longtitude = longtitude
+    this.longitude = longitude
     this.latitude = latitude
 }
 
 Tee.prototype = {
     describe : function () {
-        return this.longtitude + ',' + this.latitude;
+        return this.latitude + ',' + this.longitude;
     },
     coord: function () {
-        return new Coord(this.longtitude, this.latitude);
+        return new Coord(this.latitude, this.longitude);
     }
 }
 
@@ -198,7 +202,7 @@ Tee.Load = function (tx, row, callback) {
         [row.tee],
         function (tx, resultSet) {
             for (var k = 0; k < resultSet.rows.length; k++) {
-                callback(new Tee(resultSet.rows.item(k).name, resultSet.rows.item(k).longtitude, resultSet.rows.item(k).latitude), row);
+                callback(new Tee(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude), row);
             }
         },
         function (tx, error) {
@@ -207,20 +211,20 @@ Tee.Load = function (tx, row, callback) {
     );
 }
 
-function Basket(name, longtitude, latitude) {
+function Basket(name, latitude, longitude) {
     var __self__ = this;
 
     this.name = name
-    this.longtitude = longtitude
+    this.longitude = longitude
     this.latitude = latitude
 }
 
 Basket.prototype = {
     describe: function () {
-        return this.longtitude + ',' + this.latitude;
+        return this.latitude + ',' + this.longitude;
     },
     coord: function () {
-        return new Coord(this.longtitude, this.latitude);
+        return new Coord(this.latitude, this.longitude);
     }
 }
 
@@ -230,7 +234,7 @@ Basket.Load = function (tx, row, callback) {
         [row.basket],
         function (tx, resultSet) {
             for (var k = 0; k < resultSet.rows.length; k++) {
-                callback(new Basket(resultSet.rows.item(k).name, resultSet.rows.item(k).longtitude, resultSet.rows.item(k).latitude), row);
+                callback(new Basket(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude), row);
             }
         },
         function (tx, error) {

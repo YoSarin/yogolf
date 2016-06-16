@@ -29,6 +29,13 @@ body {
     background-color:#32383d;
     font-family: 'RobotoRegular', 'Droid Sans', 'Segoe UI', Segoe, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, Geneva, sans-serif;
     font-size:12px;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .app {
@@ -51,6 +58,19 @@ body {
     }
 }
 
+.description {
+    height: 30px;
+    line-height: 30px;
+}
+
+svg.compass {
+    vertical-align: middle;
+}
+
+.hidden {
+    display: none;
+}
+
 h1 {
     font-size:24px;
     font-weight:normal;
@@ -58,6 +78,14 @@ h1 {
     overflow:visible;
     padding:0px;
     text-align:center;
+}
+
+h2 .distance {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+
+ul.layouts {
 }
 
 .event {
@@ -79,6 +107,11 @@ h1 {
     display:none;
 }
 
+ul.paths li {
+    list-style: none;
+    clear: both;
+}
+
 @keyframes fade {
     from { opacity: 1.0; }
     50% { opacity: 0.4; }
@@ -94,4 +127,8 @@ h1 {
 .blink {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
+}
+
+#templates {
+    display: none;
 }
