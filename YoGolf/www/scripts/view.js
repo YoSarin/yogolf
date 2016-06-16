@@ -4,14 +4,24 @@ View.Courses = function (db) {
     Course.WithAll(db, function (courses) {
         $(':mobile-pagecontainer').pagecontainer('change', $('#courses'));
         $.each(courses, function (k, course) {
-            var path = course.layouts.map(function (layout) { return layout.describe() + layout.describePaths(); }).join('</li><li>');
-            var layouts = $('<li>' + path + '</li>');
+            var layouts = course.layouts.map(function (layout) {
+                return $('<li>').text(layout.name + ': ' + layout.paths.length + ' holes | par ' + layout.par() + ' | ' + layout.length().toFixed(0) + ' meters');
+            });
             $('#courses .content')
-                .append($('<h2 class="showCompass" coords="' + course.coord().toString() + '">').text(course.name))
-                .append($('<ul>').append(layouts))
+                .append($('<div class="course">')
+                    .append($('<h2 class="showCompass showDistance" coords="' + course.coord().toString() + '">').text(course.name))
+                    .append($('<ul class="layouts hidden">').append(layouts))
+                )
         });
         $(".showCompass").each(function (k, item) {
             $(item).append($("#templates .compass").clone());
+        });
+        $(".showDistance").each(function (k, item) {
+            $(item).append($('<span class="distance">'));
+        });
+        $('#courses .content h2').click(function (event) {
+            console.log(this, $(this).closest('div.course').find("ul.layouts"));
+            $(this).closest('div.course').find("ul.layouts").toggleClass("hidden");
         });
     });
 }

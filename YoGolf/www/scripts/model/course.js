@@ -151,7 +151,7 @@ Path.prototype = {
         return this.tee.coord().distanceTo(this.basket.coord())
     },
     describe: function () {
-        return '[' + this.number + '] ' + this.tee.name + ' ➟ ' + this.basket.name + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters | <span class="showCompass showDistance" coords="' + this.tee.coord().toString() + '"><span class="distance"></span></span>';
+        return '[' + this.number + '] ' + this.tee.name + ' ➟ ' + this.basket.name + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters | <span class="showCompass showDistance" coords="' + this.tee.coord().toString() + '"></span>';
     }
 }
 

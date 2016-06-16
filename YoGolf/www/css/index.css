@@ -29,6 +29,13 @@ body {
     background-color:#32383d;
     font-family: 'RobotoRegular', 'Droid Sans', 'Segoe UI', Segoe, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, Geneva, sans-serif;
     font-size:12px;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .app {
@@ -57,8 +64,12 @@ body {
 }
 
 .description svg {
-    padding: 5px;
+    padding: 7px;
     float: left;
+}
+
+.hidden {
+    display: none;
 }
 
 h1 {
@@ -68,6 +79,14 @@ h1 {
     overflow:visible;
     padding:0px;
     text-align:center;
+}
+
+h2 .distance {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+
+ul.layouts {
 }
 
 .event {

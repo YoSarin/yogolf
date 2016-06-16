@@ -32,10 +32,15 @@ var App;
                             // var c = new Coord(50.0215556, 14.2284575);
                             var itemCoord = new Coord(parseFloat(coords[0]), parseFloat(coords[1]));
                             if ($(item).hasClass('showDistance')) {
-                                $(item).find(".distance").text(Math.round(c.distanceTo(itemCoord)));
+                                var distance = Math.round(c.distanceTo(itemCoord));
+                                if (distance >= 1000) {
+                                    $(item).find(".distance").text((Math.round(distance / 100) / 10) + ' km');
+                                } else {
+                                    $(item).find(".distance").text(distance + " m");
+                                }
                             }
                             if ($(item).hasClass('showCompass')) {
-                                var direction = Math.round(heading.trueHeading - c.directionTo(itemCoord)) % 360;
+                                var direction = Math.round(heading.magneticHeading - c.directionTo(itemCoord)) % 360;
                                 View.HeadingArrow(direction, $(item).find(".compass"));
                             }
                         });
