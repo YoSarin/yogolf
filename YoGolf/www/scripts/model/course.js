@@ -40,7 +40,7 @@ Course.prototype = {
     }
 }
 
-Course.New = function (name, longitude, latitude) {
+Course.New = function (name, latitude, longitude) {
     var item = new Course();
 
     item.name = name;

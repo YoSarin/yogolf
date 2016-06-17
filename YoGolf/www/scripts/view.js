@@ -16,6 +16,13 @@ View.Courses = function (db) {
                     .append($('<ul class="layouts hidden">').append(layouts))
                 )
         });
+        $('#courses .content')
+            .append($('<div id="newCourse" class="require_GPS">')
+                .append($('<input class="clicker" type="button" value="I am on the new field Now!">'))
+            );
+        $('#newCourse .clicker').click(function () {
+            navigator.notification.prompt("Cool! What's its name?", Course.NewFromPrompt, "New course");
+        });
         $('#courses .content h2').click(function (event) {
             $(this).closest('div.course').find("ul.layouts").toggleClass("hidden");
         });
