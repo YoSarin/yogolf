@@ -1,41 +1,79 @@
 ﻿function View() { }
 
-View.Courses = function (db) {
-    Course.WithAll(db, function (courses) {
+View.Courses = function () {
+    App.AddToHistory(View.Courses, arguments);
+    Course.WithAll(function (courses) {
         $(':mobile-pagecontainer').pagecontainer('change', $('#courses'));
         $("#courses .content").html("");
         $.each(courses, function (k, course) {
             var layouts = course.layouts.map(function (layout) {
-                return $('<li>')
-                    .text(layout.name + ': ' + layout.paths.length + ' holes | par ' + layout.par() + ' | ' + layout.length().toFixed(0) + ' meters')
-                    .data("layout", layout);
+                return $('<tr>')
+                    .data("layout", layout)
+                    .append($('<th>').text(layout.name))
+                    .append($('<td>').text(layout.paths.length))
+                    .append($('<td>').text(layout.par()))
+                    .append($('<td>').text(layout.length().toFixed(0)))
+                    .append($('<td>')
+                        .append($('<span class="red layout delete button">').text("🗑"))
+                        .append($('<span class="blue info button">').text('ℹ'))
+                        .append($('<span class="green start button">').text('⛳'))
+                    )
             });
             $('#courses .content')
                 .append($('<div class="course">')
+                    .append($('<span class="red course delete button">').data('course', course).text("🗑"))
                     .append($('<h2 class="showCompass showDistance" coords="' + course.coord().toString() + '">').text(course.name))
-                    .append($('<ul class="layouts hidden">').append(layouts))
+                    .append($('<table class="layouts">')
+                        .append($('<tr>')
+                            .append($('<th>').text(""))
+                            .append($('<th>').text("Holes"))
+                            .append($('<th>').text("Par"))
+                            .append($('<th>').text("Length (m)"))
+                            .append($('<th>').text("Info"))
+                        )
+                        .append(layouts)
+                    )
                 )
-        });
+            });
         $('#courses .content')
             .append($('<div id="newCourse" class="require_GPS">')
-                .append($('<input class="clicker" type="button" value="I am on the new field Now!">'))
+                .append($('<input type="button" value="I am on the new field Now!">'))
             );
-        $('#newCourse .clicker').click(function () {
+        $('#newCourse input[type=button]').click(function () {
             navigator.notification.prompt("Cool! What's its name?", Course.NewFromPrompt, "New course");
         });
-        $('#courses .content h2').click(function (event) {
-            $(this).closest('div.course').find("ul.layouts").toggleClass("hidden");
+        $('#courses .course.delete').click(function (event) {
+            var course = $(this).data("course");
+            navigator.notification.confirm (
+                "This will locally delete whole course, with all its layouts, tees and baskets.",
+                function (button) { course.DeleteWithConfirm(button); },
+                "Are you sure?"
+            );
         });
-        $('#courses .content .layouts li').click(function (event) {
-            View.Layout($(this).data("layout"));
+        $('#courses .info').click(function (event) {
+            View.Layout($(this).closest('tr').data("layout"));
+        });
+        $('#courses .start').click(function (event) {
+            View.StartRound($(this).closest('tr').data("layout"));
+        });
+        $('#courses .layout.delete').click(function (event) {
+            var layout = $(this).closest('tr').data("layout");
+            navigator.notification.confirm (
+                "This will locally delete whole layout (tees and baskets used by other layouts will stay in app).",
+                function (button) { layout.DeleteWithConfirm(button); },
+                "Are you sure?"
+            );
+        });
+        $('#courses .content h2').click(function (event) {
+            $(this).closest('div.course').find(".layouts").toggleClass("hidden");
         });
         View.Enrich($("#courses"));
     });
 }
 
 View.Layout = function (layout) {
+    App.AddToHistory(View.Layout, arguments);
     $(':mobile-pagecontainer').pagecontainer('change', $('#layout'));
-    console.log(layout);
     $("#layout .content").html("");
     $("#layout .content").append($("<h2>").text(layout.course.name + ": " + layout.name));
     $("#layout .content").append($('<ul class="paths">'));
@@ -49,12 +87,84 @@ View.Layout = function (layout) {
     View.Enrich($("#layout"));
 }
 
+View.StartRound = function (layout) {
+    var round = new Round(layout);
+    View.Round(round);
+}
+
+View.Round = function (round) {
+    App.AddToHistory(View.Round, arguments);
+    $(':mobile-pagecontainer').pagecontainer('change', $('#round'));
+    $("#round .content").html("");
+    var path = round.layout.getPathByNumber(round.hole_number);
+    console.log(path);
+    if (path) {
+        $("#round .content")
+            .append(
+                $('<table class="path">')
+                    .append(
+                        $("<tr>")
+                            .append($("<th>").text("#"))
+                            .append($("<th>").text("Par"))
+                            .append($("<th>").text("Length"))
+                            .append($("<th>").text("Tee"))
+                            .append($("<th>").text("Basket"))
+                    )
+                    .append(
+                        $("<tr>")
+                            .append($("<td>").text(path.number))
+                            .append($("<td>").text(path.par))
+                            .append($("<td>").text(path.distance().toFixed(0)))
+                            .append($("<td>").addClass("showDistance").addClass("showCompass").attr("coords", path.tee.coord()))
+                            .append($("<td>").addClass("showDistance").addClass("showCompass").attr("coords", path.basket.coord()))
+                    )
+            )
+            .append($('<div class="padded blue next button">Next</div>'));
+
+        if (path.number > 1) {
+            $("#round .content").append($('<div class="padded blue prev button">Previous</div>'));
+        }
+
+        $("#round .button.next").click(function (event) {
+            round.moveToNext();
+            View.Round(round);
+        });
+        $("#round .button.prev").click(function (event) {
+            round.moveToPrev();
+            View.Round(round);
+        });
+    } else {
+        $("#round .content")
+            .append($("<h2>").text("No more throws to do!"))
+            .append($("<p>").text("Seems, that you're done."))
+            .append($("<p>")
+                .append($('<div class="padded blue finish button">True, lets finish it</div>'))
+                .append($('<div class="padded blue new-hole button">Noo, there is another tee!</div>'))
+            );
+        $("#round .new-hole").click(function () {
+            navigator.notification.prompt(
+                "Okay, what is its par?",
+                function (prompt) {
+                    p = Path.NewFromPrompt(prompt, round.hole_number, round.layout);
+                    if (p) {
+                        navigator.notification.prompt("Go to the tee, confirm its location and name it.", function (button) {
+                            Tee.NewFromPrompt(prompt, function (tee) { p.tee = tee; p.Save(View.Round(round)); });
+                        }, "Locate the tee!", ["Yup, I'm standing on tee", "Screw it, no more tees"])
+                    }
+                },
+                "Then lets add it!", ["Ok", "Cancel"], 3);
+        });
+    }
+    View.Enrich($('#round'));
+}
+
+// COMMON FUNCTIONS
 View.Enrich = function (page) {
     $(page).find(".showCompass").each(function (k, item) {
         $(item).append($("#templates .compass").clone());
     });
     $(page).find(".showDistance").each(function (k, item) {
-        $(item).append($('<span class="distance">'));
+        $(item).append($('<span class="distance hidden require_GPS">'));
     });
 }
 
@@ -67,6 +177,8 @@ View.refreshHeading = function (position, heading) {
         var direction = Math.round(heading.magneticHeading - c.directionTo(itemCoord)) % 360;
         View.HeadingArrow(direction, $(item).find(".compass"));
     });
+    var cl = $('.require_HEADING').attr('class').replace(/(\s|^)hidden(\s|$)/, "$1$2");
+    $('.require_HEADING').attr('class', cl);
 }
 
 View.refreshDistance = function (position) {
@@ -82,6 +194,8 @@ View.refreshDistance = function (position) {
             $(item).find(".distance").text(distance + " m");
         }
     });
+    var cl = $('.require_GPS').attr('class').replace(/(\s|^)hidden(\s|$)/, "$1$2");
+    $('.require_GPS').attr('class', cl);
 }
 
 View.HeadingArrow = function (direction, svg) {

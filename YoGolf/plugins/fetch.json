@@ -43,9 +43,8 @@
     },
     "cordova-plugin-dialogs": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-dialogs",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
         },
         "is_top_level": true,
         "variables": {}

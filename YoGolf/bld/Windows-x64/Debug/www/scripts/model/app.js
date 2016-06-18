@@ -5,7 +5,7 @@
     this.heading = null;
     this.position = null;
 
-    // this.watchHeading();
+    this.watchHeading();
     this.watchLocation();
 }
 
@@ -15,33 +15,30 @@ YoGolf.prototype = {
     },
     watchHeading: function (backoff) {
         var backoff =  Math.min((backoff || 0.5) * 2, 64);
-        var backoffTime = backoff * 250;
-        var __self__ = this;
         navigator.compass.getCurrentHeading(function (heading) {
-            __self__.heading = heading;
-            if (__self__.position) {
-                View.refreshHeading(__self__.position, heading);
+            App.heading = heading;
+            if (App.position) {
+                View.refreshHeading(App.position, heading);
             }
-            setTimeout(function () { __self__.watchHeading(); }, backoffTime);
+            setTimeout(function () { App.watchHeading(); }, 250);
         }, function (error) {
             console.log(error);
-            __self__.heading = null;
-            setTimeout(function () { __self__.watchHeading(backoff); }, backoffTime);
+            App.heading = null;
+            setTimeout(function () { App.watchHeading(backoff); }, backoff * 250);
         });
     },
     watchLocation: function (backoff) {
-        var options = { enableHighAccuracy: true };
+        var options = { enableHighAccuracy: true, timeout: 5000 };
         var backoff = Math.min((backoff || 0.5) * 2, 64);
-        var backoffTime = backoff * 250;
-        var __self__ = this;
         navigator.geolocation.getCurrentPosition(function (position) {
-            __self__.position = position;
+            App.position = position;
+            console.log(position);
             View.refreshDistance(position);
-            setTimeout(__self__.watchLocation, backoffTime);
+            setTimeout(App.watchLocation, 250);
         }, function (error) {
             console.log(error);
-            __self__.position = null;
-            setTimeout(function () { __self__.watchLocation(backoff); }, backoffTime);
+            App.position = null;
+            setTimeout(function () { App.watchLocation(backoff); }, backoff * 250);
         }, options);
     }
 }

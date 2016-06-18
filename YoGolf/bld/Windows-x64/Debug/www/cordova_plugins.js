@@ -93,6 +93,22 @@ module.exports = [
         "merges": [
             ""
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/src/windows/NotificationProxy.js",
+        "id": "cordova-plugin-dialogs.NotificationProxy",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            ""
+        ]
     }
 ];
 module.exports.metadata = 
@@ -102,7 +118,8 @@ module.exports.metadata =
     "cordova-sqlite-storage": "1.4.1",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-geolocation": "2.2.0",
-    "cordova-plugin-device-orientation": "1.0.4-dev"
+    "cordova-plugin-device-orientation": "1.0.4-dev",
+    "cordova-plugin-dialogs": "1.2.1"
 };
 // BOTTOM OF METADATA
 });

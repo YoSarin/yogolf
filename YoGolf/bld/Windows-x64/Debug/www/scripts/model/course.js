@@ -16,21 +16,34 @@ Course.prototype = {
         Layout.LoadForCourse(tx, this, function (layout) { __self__.layouts.push(layout); } );
     },
 
-    Save: function () {
+    Save: function (callback) {
         var __self__ = this;
+        callback = callback || function () { }
         if (this.rowid == null) {
             App.db.executeSql(
                 "INSERT INTO course (name, longitude, latitude) VALUES (?, ?, ?);",
                 [this.name, this.longitude, this.latitude],
-                function (resultSet) { __self__.rowid = resultSet.insertId; },
-                function (error) { Panic(error.message); }
+                function (resultSet) {
+                    __self__.rowid = resultSet.insertId;
+                    callback(true);
+                },
+                function (error) {
+                    Panic(error.message);
+                    callback(false);
+                }
             );
         } else {
             App.db.executeSql(
                 "UPDATE course SET name = ?, longitude = ?, latitude = ? WHERE rowid = ?;",
                 [this.name, this.longitude, this.latitude, this.rowid],
-                function (resultSet) { console.log(resultSet); },
-                function (error) { Panic(error.message); }
+                function (resultSet) {
+                    console.log(resultSet);
+                    callback(true);
+                },
+                function (error) {
+                    Panic(error.message);
+                    callback(false);
+                }
             );
         }
     },
@@ -40,7 +53,7 @@ Course.prototype = {
     }
 }
 
-Course.New = function (name, longitude, latitude) {
+Course.New = function (name, latitude, longitude) {
     var item = new Course();
 
     item.name = name;
@@ -49,6 +62,18 @@ Course.New = function (name, longitude, latitude) {
     item.layouts = Array();
 
     return item;
+}
+
+Course.NewFromPrompt = function (prompt) {
+    if (prompt.buttonIndex == 1 && prompt.input1) {
+        var c = null;
+        if (App.position) {
+            c = Course.New(prompt.input1, App.position.coords.latitude, App.position.coords.longitude);
+        } else {
+            c = Course.New(prompt.input1, null, null);
+        }
+        c.Save(function () { View.Courses(db); });
+    }
 }
 
 Course.WithAll = function (db, callback) {
@@ -94,6 +119,9 @@ Layout.prototype = {
         var __self__ = this;
         Path.LoadForLayout(tx, this, function (path) { __self__.paths.push(path); });
     },
+    Save: function() {
+
+    },
     describePaths: function () {
         return this.paths.map(function (path) { return '<div class="description" coords="' + path.tee.coord().toString() + '">' + path.describe() + '</div>'; }).join("\n");
     },
@@ -114,6 +142,12 @@ Layout.prototype = {
         });
         return len;
     }
+}
+
+
+Layout.New = function (name, course) {
+    var l = new Layout(name, course);
+    return l;
 }
 
 Layout.LoadForCourse = function (tx, course, callback) {

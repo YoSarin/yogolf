@@ -1,7 +1,3 @@
----
-title: Dialogs
-description: Use native dialog UI elements
----
 <!--
 # license: Licensed to the Apache Software Foundation (ASF) under one
 #         or more contributor license agreements.  See the NOTICE file
@@ -21,9 +17,7 @@ description: Use native dialog UI elements
 #         under the License.
 -->
 
-|Android|iOS| Windows 8.1 Store | Windows 8.1 Phone | Windows 10 Store | Travis CI |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=android,PLUGIN=cordova-plugin-dialogs)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=android,PLUGIN=cordova-plugin-dialogs/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=ios,PLUGIN=cordova-plugin-dialogs)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=ios,PLUGIN=cordova-plugin-dialogs/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-8.1-store,PLUGIN=cordova-plugin-dialogs)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-8.1-store,PLUGIN=cordova-plugin-dialogs/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-8.1-phone,PLUGIN=cordova-plugin-dialogs)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-8.1-phone,PLUGIN=cordova-plugin-dialogs/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-10-store,PLUGIN=cordova-plugin-dialogs)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-10-store,PLUGIN=cordova-plugin-dialogs/)|[![Build Status](https://travis-ci.org/apache/cordova-plugin-dialogs.svg?branch=master)](https://travis-ci.org/apache/cordova-plugin-dialogs)|
+[![Build Status](https://travis-ci.org/apache/cordova-plugin-dialogs.svg?branch=master)](https://travis-ci.org/apache/cordova-plugin-dialogs)
 
 # cordova-plugin-dialogs
 
@@ -85,7 +79,6 @@ function, which is typically less customizable.
 - Amazon Fire OS
 - Android
 - BlackBerry 10
-- Browser
 - Firefox OS
 - iOS
 - Tizen
@@ -150,7 +143,6 @@ indexing, so the value is `1`, `2`, `3`, etc.
 - Amazon Fire OS
 - Android
 - BlackBerry 10
-- Browser
 - Firefox OS
 - iOS
 - Tizen
@@ -222,7 +214,6 @@ contains the following properties:
 
 - Amazon Fire OS
 - Android
-- Browser
 - Firefox OS
 - iOS
 - Windows Phone 7 and 8
@@ -261,7 +252,6 @@ The device plays a beep sound.
 - Amazon Fire OS
 - Android
 - BlackBerry 10
-- Browser
 - iOS
 - Tizen
 - Windows Phone 7 and 8

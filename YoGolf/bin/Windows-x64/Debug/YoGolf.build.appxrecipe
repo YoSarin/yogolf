@@ -91,6 +91,12 @@
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-device-orientation\www\CompassHeading.js">
       <PackagePath>www\plugins\cordova-plugin-device-orientation\www\CompassHeading.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-dialogs\src\windows\NotificationProxy.js">
+      <PackagePath>www\plugins\cordova-plugin-dialogs\src\windows\NotificationProxy.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-dialogs\www\notification.js">
+      <PackagePath>www\plugins\cordova-plugin-dialogs\www\notification.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\src\windows\GeolocationProxy.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\src\windows\GeolocationProxy.js</PackagePath>
     </AppxPackagedFile>
@@ -118,6 +124,9 @@
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\index.js">
       <PackagePath>www\scripts\index.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\app.js">
+      <PackagePath>www\scripts\model\app.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\course.js">
       <PackagePath>www\scripts\model\course.js</PackagePath>
     </AppxPackagedFile>
@@ -132,9 +141,6 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\position.js">
       <PackagePath>www\scripts\model\position.js</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\yogolf.js">
-      <PackagePath>www\scripts\model\yogolf.js</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\platformOverrides.js">
       <PackagePath>www\scripts\platformOverrides.js</PackagePath>
