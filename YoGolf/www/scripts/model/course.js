@@ -115,7 +115,7 @@ Course.WithAll = function (callback) {
     App.db.readTransaction(
         function (tx) {
             tx.executeSql(
-                "SELECT rowid, * FROM course ORDER BY name DESC;",
+                "SELECT rowid, * FROM course ORDER BY name ASC;",
                 [],
                 function (tx, resultSet) {
                     for (var k = 0; k < resultSet.rows.length; k++) {
@@ -205,16 +205,8 @@ Layout.prototype = {
             this.Delete(function () { View.Courses(App.db); });
         }
     },
-
     getPathByNumber: function (number) {
-        var path = null
-        $.each(this.paths, function (k, v) {
-            if (v.number == number) {
-                path = v;
-                return;
-            }
-        });
-        return path;
+        return this.paths[number - 1];
     },
     describePaths: function () {
         return this.paths.map(function (path) { return '<div class="description" coords="' + path.tee.coord().toString() + '">' + path.describe() + '</div>'; }).join("\n");
@@ -248,7 +240,7 @@ Layout.New = function (name, course) {
 Layout.LoadForCourse = function (tx, course, callback) {
 
     tx.executeSql(
-        "SELECT rowid, * FROM layout WHERE course = ?;",
+        "SELECT rowid, * FROM layout WHERE course = ? ORDER BY name ASC;",
         [course.rowid],
         function (tx, resultSet) {
             for (var k = 0; k < resultSet.rows.length; k++) {

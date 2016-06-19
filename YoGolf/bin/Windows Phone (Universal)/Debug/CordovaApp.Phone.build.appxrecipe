@@ -146,6 +146,9 @@
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\index.js">
       <PackagePath>www\scripts\index.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\jquery_extensions.js">
+      <PackagePath>www\scripts\jquery_extensions.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\app.js">
       <PackagePath>www\scripts\model\app.js</PackagePath>
     </AppxPackagedFile>

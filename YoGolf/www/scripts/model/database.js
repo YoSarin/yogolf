@@ -42,8 +42,12 @@
                 "CREATE TABLE IF NOT EXISTS path(gid int default null, number int, layout int, basket int, tee int, par int, description text, state int default 0);",
                 "CREATE TABLE IF NOT EXISTS app_info(version int, updated datetime DEFAULT CURRENT_TIMESTAMP);",
 
-                "CREATE TABLE IF NOT EXISTS round (gid int default null, layout int, start datetime, end datetime DEFAULT CURRENT_TIMESTAMP, hole_number int)",
+                "CREATE TABLE IF NOT EXISTS round (gid int default null, layout int, start datetime, end datetime DEFAULT CURRENT_TIMESTAMP, hole_number int, finished boolean default false)",
                 "CREATE TABLE IF NOT EXISTS score (gid int default null, player int, throws int, round int, path int)",
+
+                "INSERT INTO player (name, email) VALUES ('Martin', 'martin@yosarin.net')",
+                "INSERT INTO player (name, email) VALUES ('Lída', 'lidalejsal@gmail.com')",
+                "INSERT INTO player (name, email) VALUES ('Petr', 'pzaloha@volny.cz')",
 
                 "INSERT INTO app_info (version) VALUES (1);",
                 "INSERT INTO course (name, latitude, longitude) VALUES ('Nučice', 50.021287, 14.2269195);",

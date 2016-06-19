@@ -97,17 +97,32 @@ h2 .distance {
     text-align: center;
 }
 
-.path tr:nth-child(1) {
+.path td:nth-child(1) {
     width: 20%;
 }
-.path tr:nth-child(2) {
+.path td:nth-child(2) {
     width: 20%;
 }
-.path tr:nth-child(3) {
+.path td:nth-child(3) {
     width: 30%;
 }
-.path tr:nth-child(4) {
+.path td:nth-child(4) {
     width: 30%;
+}
+
+.players td:nth-child(1) {
+}
+.players td:nth-child(2) {
+    width: 30px;
+}
+.players td:nth-child(3) {
+    width: 30px;
+}
+.players td:nth-child(4) {
+    width: 30px;
+}
+.players td:nth-child(5) {
+    width: 30px;
 }
 
 .event {
@@ -161,11 +176,11 @@ ul li {
     float: right;
     border: 1px solid;
     display: inline-block;
-    min-width: 20px;
-    min-height: 20px;
+    min-width: 30px;
+    min-height: 30px;
     text-align: center;
-    line-height: 20px;
-    border-radius: 10px;
+    line-height: 30px;
+    border-radius: 16px;
     margin: 3px;
 }
 
@@ -184,6 +199,7 @@ ul li {
 
 .button.padded {
     padding: 5px;
+    border-radius: 21px;
 }
 
 .button.red {
@@ -198,6 +214,33 @@ ul li {
     color: blue;
 }
 
+.button.clicked {
+    color: grey !important;
+    background-color: lightgray !important;
+}
+
 div.footer {
     overflow: hidden;
+}
+
+.score {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    padding: 5px;
+}
+
+.score.ob {
+    border: 1px solid #ccc;
+    border-radius: 16px;
+}
+
+.score.ob2 {
+    border: 3px double #bbb;
+    border-radius: 18px;
+}
+
+.score.ob3 {
+    border: 3px double #faa;
 }
