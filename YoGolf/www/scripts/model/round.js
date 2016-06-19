@@ -97,6 +97,8 @@ Round.prototype = {
 }
 
 Round.WithAll = function (callback) {
+
+    // not ready yet!
     var courses = Array();
 
     App.db.readTransaction(
@@ -111,7 +113,7 @@ Round.WithAll = function (callback) {
                         item.hole_number = resultSet.rows.item(k).hole_number;
                         item.start = resultSet.rows.item(k).start;
                         item.end = resultSet.rows.item(k).end;
-                        item.layout = Layout.
+                        // item.layout = Layout.
                         item.Load(tx);
                         courses.push(item);
                     }
