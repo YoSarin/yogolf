@@ -4,14 +4,16 @@
     this.rowid = null;
     this.start = new Date();
 
-    this.scores = Array();
+    this.scores = {};
 }
 
 Round.prototype = {
     Save: function (callback) {
         enrichedCallback = function (round) {
-            $.each(this.scores, function (k, score) {
-                score.Save();
+            $.each(this.scores, function (email, pathList) {
+                $.each(pathList, function (pathid, score) {
+                    score.Save();
+                });
             });
             callback(round);
         }
@@ -23,8 +25,28 @@ Round.prototype = {
     moveToPrev: function () {
         this.hole_number = Math.max(1, this.hole_number - 1);
     },
-    addScore: function (score) {
-        this.scores.push(score);
+    addScore: function (player, throws) {
+        var path = this.layout.getPathByNumber(this.hole_number);
+        if (path) {
+            if (!this.scores[player.email]) {
+                this.scores[player.email] = Array();
+                for (var i = 1; i < this.hole_number; i++) {
+                    var p = this.layout.getPathByNumber(i);
+                    if (p) {
+                        this.scores[player.email][p.rowid] = new Score(this, player, path, path.par);
+                    }
+                }
+            }
+            if (!this.scores[player.email][path.rowid]) {
+                this.scores[player.email][path.rowid] = new Score(this, player, path, throws);
+            } else {
+                this.scores[player.email][path.rowid].throws = throws;
+            }
+        }
+    },
+    players: function () {
+        var emails = Object.keys(this.scores);
+        return emails.map(function (email) { return App.playerByEmail(email); });
     },
     tableName: function() {
         return "round";

@@ -21,17 +21,28 @@ YoGolf.prototype = {
     },
     AddToHistory: function (callback, params) {
         var place = this.history.length - 1;
-        if (place < 0 || (this.history[place]['callback'] != callback && this.history[place]['params'] != params)) {
+        if (place < 0 || this.history[place]['callback'] != callback || this.history[place]['params'] != params) {
             this.history.push({ 'callback': callback, 'params': params });
         }
     },
     goBack: function () {
         if (this.history.length > 1) {
             var current = this.history.pop();
-            var fn = this.history[this.history.length - 1]['callback'];
-            var params = this.history[this.history.length - 1]['params'];
-            fn.apply(params);
+            var moveTo = this.history.pop();
+            var fn = moveTo['callback'];
+            var params = moveTo['params'];
+            fn.apply(null, params);
         }
+    },
+    playerByEmail: function (email) {
+        var user = null;
+        $.each(this.players, function (k, player) {
+            if (player.email == email) {
+                user = player;
+                return;
+            }
+        });
+        return user;
     },
     watchHeading: function (backoff) {
         var backoff =  Math.min((backoff || 0.5) * 2, 64);

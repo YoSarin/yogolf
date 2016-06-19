@@ -89,28 +89,25 @@ h2 .distance {
     border-bottom: 1px solid #E4E4E4;
 }
 
-.layouts, .path {
+.layouts, .path, .players {
     width: 100%;
 }
 
-.layouts td, .path td {
+.layouts td, .path td, .players td {
     text-align: center;
 }
 
 .path tr:nth-child(1) {
-    width: 15%;
+    width: 20%;
 }
 .path tr:nth-child(2) {
-    width: 15%;
+    width: 20%;
 }
 .path tr:nth-child(3) {
-    width: 15%;
+    width: 30%;
 }
 .path tr:nth-child(4) {
-    width: 15%;
-}
-.path tr:nth-child(5) {
-    width: 40%;
+    width: 30%;
 }
 
 .event {
@@ -163,13 +160,26 @@ ul li {
 .button {
     float: right;
     border: 1px solid;
-    display: block;
+    display: inline-block;
     min-width: 20px;
     min-height: 20px;
     text-align: center;
     line-height: 20px;
     border-radius: 10px;
     margin: 3px;
+}
+
+.button.full_width {
+    width: 100%;
+    box-sizing:border-box;
+}
+
+.button.at_left {
+    float: left;
+}
+
+.button.no_float {
+    float: none;
 }
 
 .button.padded {
@@ -186,4 +196,8 @@ ul li {
 
 .button.blue {
     color: blue;
+}
+
+div.footer {
+    overflow: hidden;
 }

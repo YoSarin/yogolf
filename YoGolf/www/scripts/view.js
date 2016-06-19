@@ -89,15 +89,14 @@ View.Layout = function (layout) {
 
 View.StartRound = function (layout) {
     var round = new Round(layout);
-    View.Round(round);
+    View.Round(round, round.hole_number);
 }
 
-View.Round = function (round) {
+View.Round = function (round, hole_number) { // passing hole number separately, to be able to track history while walking through layout
     App.AddToHistory(View.Round, arguments);
     $(':mobile-pagecontainer').pagecontainer('change', $('#round'));
     $("#round .content").html("");
-    var path = round.layout.getPathByNumber(round.hole_number);
-    console.log(path);
+    var path = round.layout.getPathByNumber(hole_number);
     if (path) {
         $("#round .content")
             .append(
@@ -109,7 +108,6 @@ View.Round = function (round) {
                             .append($("<th>").text("Basket"))
                             .append($("<th>").text("Par"))
                             .append($("<th>").text("Length"))
-                            .append($("<th>").text("Description"))
                     )
                     .append(
                         $("<tr>")
@@ -118,31 +116,49 @@ View.Round = function (round) {
                             .append($("<td>").text(path.basket.name))
                             .append($("<td>").text(path.par))
                             .append($("<td>").text(path.distance().toFixed(0)))
-                            .append($("<td>").text(path.description))
                     )
             )
-            .append($('<div class="padded blue next button">Next</div>'));
+            .append($('<p>').text(path.description))
+            .append($('<table class="players">')
+            );
 
-        if (path.number > 1) {
-            $("#round .content").append($('<div class="padded blue prev button">Previous</div>'));
-        }
-
-        $("#round .button.next").click(function (event) {
-            round.moveToNext();
-            View.Round(round);
+        $.each(round.scores, function (email, scoreList) {
+            $('#round .players')
+                .append($('<tr>')
+                    .append($('<td>').text(email))
+                    .append($('<td>').append($('<span class="green minus button">').text("-")))
+                    .append($('<td>').text(scoreList[path.rowid] ? scoreList[path.rowid] : path.par))
+                    .append($('<td>').append($('<span class="red plus button">').text("+")))
+                    .append($('<td>').append($('<span class="red ob button">').text("OB")))
+                );
         });
-        $("#round .button.prev").click(function (event) {
-            round.moveToPrev();
-            View.Round(round);
-        });
+        
+        $('#round .players')
+            .append($('<tr>')
+                .append($('<td colspan="5">').append($('<span class="padded blue full_width add_player button">').text("Add player")))
+            );
 
         $("#round h1.header").html(path.layout.course.name + ' <small>' + path.layout.name + '</small>');
 
+        $("#round div.footer").text("");
+        if (path.number > 1) {
+            $("#round div.footer").append($('<div class="padded blue prev button at_left">Previous</div>'));
+        }
+        $("#round div.footer").append($('<div class="padded blue next button">Next</div>'));
         $("#round h4.footer")
             .text("Tee: ")
-            .append($('<span class="showCompass showDistance" coords="' + path.tee.coord().toString() + '">'))
+            .append($('<span class="showCompass showDistance updateCoords" coords="' + path.tee.coord().toString() + '">').data("object", path.tee))
             .append(" | Basket: ")
-            .append($('<span class="showCompass showDistance" coords="' + path.basket.coord().toString() + '">'));
+            .append($('<span class="showCompass showDistance updateCoords" coords="' + path.basket.coord().toString() + '">').data("object", path.basket));
+
+        $("#round .button.next").click(function (event) {
+            round.moveToNext();
+            View.Round(round, round.hole_number);
+        });
+        $("#round .button.prev").click(function (event) {
+            round.moveToPrev();
+            View.Round(round, round.hole_number);
+        });
     } else {
         $("#round .content")
             .append($("<h2>").text("No more throws to do!"))
@@ -159,6 +175,8 @@ View.Round = function (round) {
                 },
                 "Then lets add it!", ["Ok", "Cancel"], 3);
         });
+        $("#round div.footer").text("");
+        $("#round h4.footer").text("We're done!");
     }
     View.Enrich($('#round'));
 }
@@ -170,6 +188,20 @@ View.Enrich = function (page) {
     });
     $(page).find(".showDistance").each(function (k, item) {
         $(item).append($('<span class="distance hidden require_GPS">'));
+    });
+    $(page).find(".updateCoords").click(function (event) {
+        var obj = $(this).data("object");
+        var elem = $(this);
+        if (App.position) {
+            navigator.notification.confirm("Are you at place?", function (button) {
+                if (button == 1) {
+                    obj.latitude = App.position.coords.latitude;
+                    obj.longitude = App.position.coords.longitude;
+                    obj.Save();
+                    elem.attr("coords", obj.coord.toString());
+                }
+            }, "Changing location");
+        }
     });
 }
 
@@ -196,7 +228,7 @@ View.refreshDistance = function (position) {
         if (distance >= 1000) {
             $(item).find(".distance").text((Math.round(distance / 100) / 10) + ' km');
         } else {
-            $(item).find(".distance").text(distance + " m");
+            $(item).find(".distance").text(distance + " m (± " + position.coords.accuracy + ")");
         }
     });
     var cl = $('.require_GPS').attr('class').replace(/(\s|^)hidden(\s|$)/, "$1$2");

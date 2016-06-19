@@ -323,13 +323,15 @@ Path.LoadForLayout = function (tx, layout, callback) {
             var paths = Array();
 
             for (var k = 0; k < resultSet.rows.length; k++) {
-                var row = resultSet.rows.item(k);
-                Basket.Load(tx, row, function (basket, row) {
-                    Tee.Load(tx, row, function (tee, row) {
-                        var item = new Path(row.number, layout, basket, tee, row.par);
-                        callback(item);
-                    })
-                });
+                (function(row) {
+                    Basket.Load(tx, row.basket, function (basket) {
+                        Tee.Load(tx, row.tee, function (tee) {
+                            var item = new Path(row.number, layout, basket, tee, row.par);
+                            item.rowid = row.rowid;
+                            callback(item);
+                        })
+                    });
+                }) (resultSet.rows.item(k));
             }
         },
         function (tx, error) {
@@ -382,13 +384,15 @@ Tee.NewFromPrompt = function (prompt, callback) {
     return null;
 }
 
-Tee.Load = function (tx, row, callback) {
+Tee.Load = function (tx, rowid, callback) {
     tx.executeSql(
         "SELECT rowid, * FROM tee WHERE rowid = ?;",
-        [row.tee],
+        [rowid],
         function (tx, resultSet) {
             for (var k = 0; k < resultSet.rows.length; k++) {
-                callback(new Tee(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude), row);
+                var t = new Tee(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude);
+                t.rowid = resultSet.rows.item(k).rowid;
+                callback(t);
             }
         },
         function (tx, error) {
@@ -427,13 +431,15 @@ Basket.prototype = {
     }
 }
 
-Basket.Load = function (tx, row, callback) {
+Basket.Load = function (tx, rowid, callback) {
     tx.executeSql(
         "SELECT rowid, * FROM basket WHERE rowid = ?;",
-        [row.basket],
+        [rowid],
         function (tx, resultSet) {
             for (var k = 0; k < resultSet.rows.length; k++) {
-                callback(new Basket(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude), row);
+                var b = new Basket(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude)
+                b.rowid = resultSet.rows.item(k).rowid;
+                callback(b);
             }
         },
         function (tx, error) {
