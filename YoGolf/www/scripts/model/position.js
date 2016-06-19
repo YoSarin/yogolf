@@ -10,9 +10,15 @@ Coord.prototype = {
         return this.latitude + ',' + this.longitude;
     },
     latDistanceTo: function (otherCoord) {
+        if (!this.latitude || !otherCoord.latitude) {
+            return 0;
+        }
         return Math.tan((otherCoord.latitude.toRad() - this.latitude.toRad()) / 2) * 2 * Coord.EarthRadius;
     },
     longDistanceTo: function (otherCoord) {
+        if (!this.longitude || !otherCoord.longitude) {
+            return 0;
+        }
         return Math.tan((otherCoord.longitude.toRad() - this.longitude.toRad()) / 2) * 2 * Coord.EarthRadius;
     },
     distanceTo: function (otherCoord) {

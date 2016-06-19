@@ -1,4 +1,6 @@
-﻿
+﻿var BUTTON_OK = 1;
+
+
 function Course() {
     var __self__ = this;
 
@@ -25,11 +27,10 @@ Course.prototype = {
                 [this.name, this.longitude, this.latitude],
                 function (resultSet) {
                     __self__.rowid = resultSet.insertId;
-                    callback(true);
+                    callback(__self__);
                 },
                 function (error) {
                     Panic(error.message);
-                    callback(false);
                 }
             );
         } else {
@@ -38,13 +39,36 @@ Course.prototype = {
                 [this.name, this.longitude, this.latitude, this.rowid],
                 function (resultSet) {
                     console.log(resultSet);
+                    callback(__self__);
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        }
+    },
+
+    Delete: function (callback) {
+        callback = callback || function () { };
+        if (this.rowid) {
+            App.db.executeSql(
+                "DELETE FROM course WHERE rowid = ?",
+                [this.rowid],
+                function (resultSet) {
+                    App.dbCleanup();
                     callback(true);
                 },
                 function (error) {
                     Panic(error.message);
-                    callback(false);
                 }
             );
+        }
+    },
+
+    DeleteWithConfirm: function (buttonPressed) {
+        console.log(this);
+        if (buttonPressed == BUTTON_OK) {
+            this.Delete(function () { View.Courses(App.db); });
         }
     },
 
@@ -65,24 +89,33 @@ Course.New = function (name, latitude, longitude) {
 }
 
 Course.NewFromPrompt = function (prompt) {
-    if (prompt.buttonIndex == 1 && prompt.input1) {
+    if (prompt.buttonIndex == BUTTON_OK && prompt.input1) {
         var c = null;
         if (App.position) {
             c = Course.New(prompt.input1, App.position.coords.latitude, App.position.coords.longitude);
         } else {
             c = Course.New(prompt.input1, null, null);
         }
-        c.Save(function () { View.Courses(db); });
+        c.Save(function (course) {
+            if (course) {
+                var l = Layout.New("Standard", course);
+                l.Save(function (layout) {
+                    View.Courses(App.db);
+                });
+            } else {
+                Panic("Course save failed");
+            }
+        });
     }
 }
 
-Course.WithAll = function (db, callback) {
+Course.WithAll = function (callback) {
     var courses = Array();
 
-    db.readTransaction(
+    App.db.readTransaction(
         function (tx) {
             tx.executeSql(
-                "SELECT rowid, * FROM course;",
+                "SELECT rowid, * FROM course ORDER BY name DESC;",
                 [],
                 function (tx, resultSet) {
                     for (var k = 0; k < resultSet.rows.length; k++) {
@@ -119,8 +152,69 @@ Layout.prototype = {
         var __self__ = this;
         Path.LoadForLayout(tx, this, function (path) { __self__.paths.push(path); });
     },
-    Save: function() {
+    Save: function (callback) {
+        var __self__ = this;
+        callback = callback || function () { }
+        if (this.rowid == null) {
+            App.db.executeSql(
+                "INSERT INTO layout (name, course) VALUES (?, ?);",
+                [this.name, this.course.rowid],
+                function (resultSet) {
+                    __self__.rowid = resultSet.insertId;
+                    callback(__self__);
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        } else {
+            App.db.executeSql(
+                "UPDATE layout SET name = ?, course = ? WHERE rowid = ?;",
+                [this.name, this.course.rowid, this.rowid],
+                function (resultSet) {
+                    console.log(resultSet);
+                    callback(__self__);
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        }
+    },
 
+    Delete: function (callback) {
+        callback = callback || function () { };
+        if (this.rowid) {
+            App.db.executeSql(
+                "DELETE FROM layout WHERE rowid = ?",
+                [this.rowid],
+                function (resultSet) {
+                    App.dbCleanup();
+                    callback(true);
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        }
+    },
+
+    DeleteWithConfirm: function (buttonPressed) {
+        console.log(this);
+        if (buttonPressed == BUTTON_OK) {
+            this.Delete(function () { View.Courses(App.db); });
+        }
+    },
+
+    getPathByNumber: function (number) {
+        var path = null
+        $.each(this.paths, function (k, v) {
+            if (v.number == number) {
+                path = v;
+                return;
+            }
+        });
+        return path;
     },
     describePaths: function () {
         return this.paths.map(function (path) { return '<div class="description" coords="' + path.tee.coord().toString() + '">' + path.describe() + '</div>'; }).join("\n");
@@ -130,6 +224,7 @@ Layout.prototype = {
     },
     par: function () {
         var par = 0;
+        console.log(this);
         $.each(this.paths, function (k, v) {
             par += v.par;
         });
@@ -181,6 +276,21 @@ function Path(number, layout, basket, tee, par) {
 }
 
 Path.prototype = {
+    Save: function (callback) {
+        Model.Save(this, callback);
+    },
+    tableName: function() {
+        return "path";
+    },
+    getData: function () {
+        return {
+            "number": this.number,
+            "layout": this.layout.rowid,
+            "basket": this.basket.rowid || null,
+            "tee": this.tee.rowid || null,
+            "par": this.par,
+        }
+    },
     distance: function () {
         return this.tee.coord().distanceTo(this.basket.coord())
     },
@@ -189,6 +299,19 @@ Path.prototype = {
     }
 }
 
+Path.NewFromPrompt = function (prompt, number, layout, callback) {
+    if (prompt.buttonIndex == BUTTON_OK && prompt.input1) {
+        tee = new Tee(number, null, null);
+        tee.Save(function (tee) {
+            basket = new Basket(number, null, null);
+            basket.Save(function (basket) {
+                p = new Path(number, layout, tee, basket, parseInt(prompt.input1));
+                p.Save(callback);
+            });
+        });
+    }
+    return null;
+}
 
 Path.LoadForLayout = function (tx, layout, callback) {
     tx.executeSql(
@@ -222,12 +345,39 @@ function Tee(name, latitude, longitude) {
 }
 
 Tee.prototype = {
+    Save: function (callback) {
+        Model.Save(this, callback);
+    },
+    tableName: function () {
+        return "tee";
+    },
+    getData: function () {
+        return {
+            "name": this.name,
+            "latitude": this.latitude,
+            "longitude": this.longitude,
+        }
+    },
     describe : function () {
         return this.latitude + ',' + this.longitude;
     },
     coord: function () {
         return new Coord(this.latitude, this.longitude);
     }
+}
+
+Tee.NewFromPrompt = function (prompt, callback) {
+    if (prompt.buttonIndex == BUTTON_OK && prompt.input1) {
+        var lat = null;
+        var long = null;
+        if (App.position) {
+            lat = App.position.coords.latitude;
+            long = App.position.coords.longitude;
+        }
+        t = new Tee(prompt.input1, lat, long);
+        t.Save(callback);
+    }
+    return null;
 }
 
 Tee.Load = function (tx, row, callback) {
@@ -254,6 +404,19 @@ function Basket(name, latitude, longitude) {
 }
 
 Basket.prototype = {
+    Save: function (callback) {
+        Model.Save(this, callback);
+    },
+    tableName: function () {
+        return "basket";
+    },
+    getData: function () {
+        return {
+            "name": this.name,
+            "latitude": this.latitude,
+            "longitude": this.longitude,
+        }
+    },
     describe: function () {
         return this.latitude + ',' + this.longitude;
     },

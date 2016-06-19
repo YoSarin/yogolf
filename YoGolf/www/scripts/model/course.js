@@ -273,6 +273,7 @@ function Path(number, layout, basket, tee, par) {
     this.basket = basket;
     this.tee = tee;
     this.par = par;
+    this.description = "";
 }
 
 Path.prototype = {
@@ -289,6 +290,7 @@ Path.prototype = {
             "basket": this.basket.rowid || null,
             "tee": this.tee.rowid || null,
             "par": this.par,
+            "description": this.description,
         }
     },
     distance: function () {
@@ -299,9 +301,16 @@ Path.prototype = {
     }
 }
 
-Path.NewFromPrompt = function (prompt, number, layout) {
+Path.NewFromPrompt = function (prompt, number, layout, callback) {
     if (prompt.buttonIndex == BUTTON_OK && prompt.input1) {
-        return new Path(number, layout, null, null, parseInt(prompt.input1));
+        tee = new Tee(number, null, null);
+        tee.Save(function (tee) {
+            basket = new Basket(number, null, null);
+            basket.Save(function (basket) {
+                p = new Path(number, layout, tee, basket, parseInt(prompt.input1));
+                p.Save(function (path) { layout.paths.push(path); callback(path); });
+            });
+        });
     }
     return null;
 }
@@ -397,6 +406,19 @@ function Basket(name, latitude, longitude) {
 }
 
 Basket.prototype = {
+    Save: function (callback) {
+        Model.Save(this, callback);
+    },
+    tableName: function () {
+        return "basket";
+    },
+    getData: function () {
+        return {
+            "name": this.name,
+            "latitude": this.latitude,
+            "longitude": this.longitude,
+        }
+    },
     describe: function () {
         return this.latitude + ',' + this.longitude;
     },

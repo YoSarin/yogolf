@@ -22,7 +22,7 @@
     <AppXManifest Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\build\windows\debug\x64\win8.1\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:23.288</Modified>
+      <Modified>2016-06-18T23:57:44.848</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -37,193 +37,201 @@
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\SplashScreen.scale-100.png">
       <PackagePath>images\SplashScreen.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.535</Modified>
+      <Modified>2016-06-18T23:57:42.212</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Square150x150Logo.scale-100.png">
       <PackagePath>images\Square150x150Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.515</Modified>
+      <Modified>2016-06-18T23:57:42.191</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Square30x30Logo.scale-100.png">
       <PackagePath>images\Square30x30Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.518</Modified>
+      <Modified>2016-06-18T23:57:42.195</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Square310x310Logo.scale-100.png">
       <PackagePath>images\Square310x310Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.520</Modified>
+      <Modified>2016-06-18T23:57:42.197</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Square44x44Logo.scale-100.png">
       <PackagePath>images\Square44x44Logo.scale-100.png</PackagePath>
-      <Modified>2016-06-18T02:26:20.522</Modified>
+      <Modified>2016-06-18T23:57:42.198</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Square70x70Logo.scale-100.png">
       <PackagePath>images\Square70x70Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.525</Modified>
+      <Modified>2016-06-18T23:57:42.203</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Square71x71Logo.scale-100.png">
       <PackagePath>images\Square71x71Logo.scale-100.png</PackagePath>
-      <Modified>2016-06-18T02:26:20.527</Modified>
+      <Modified>2016-06-18T23:57:42.204</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\StoreLogo.scale-100.png">
       <PackagePath>images\StoreLogo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.530</Modified>
+      <Modified>2016-06-18T23:57:42.207</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\images\Wide310x150Logo.scale-100.png">
       <PackagePath>images\Wide310x150Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-06-18T02:26:20.532</Modified>
+      <Modified>2016-06-18T23:57:42.210</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\images\cordova.png">
       <PackagePath>www\images\cordova.png</PackagePath>
-      <Modified>2016-06-18T02:26:19.890</Modified>
+      <Modified>2016-06-18T23:57:41.464</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\cordova-js-src\exec.js">
       <PackagePath>www\cordova-js-src\exec.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.777</Modified>
+      <Modified>2016-06-18T23:57:42.402</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\cordova-js-src\platform.js">
       <PackagePath>www\cordova-js-src\platform.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.784</Modified>
+      <Modified>2016-06-18T23:57:42.403</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\cordova.js">
       <PackagePath>www\cordova.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.135</Modified>
+      <Modified>2016-06-18T23:57:41.791</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\cordova_plugins.js">
       <PackagePath>www\cordova_plugins.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.789</Modified>
+      <Modified>2016-06-18T23:57:42.404</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\js\jquery-1.11.1.min.js">
       <PackagePath>www\js\jquery-1.11.1.min.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.857</Modified>
+      <Modified>2016-06-18T23:57:42.471</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\js\jquery-1.5.0.mobile.min.js">
       <PackagePath>www\js\jquery-1.5.0.mobile.min.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.084</Modified>
+      <Modified>2016-06-18T23:57:42.687</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-device-orientation\src\windows\CompassProxy.js">
       <PackagePath>www\plugins\cordova-plugin-device-orientation\src\windows\CompassProxy.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.090</Modified>
+      <Modified>2016-06-18T23:57:42.688</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-device-orientation\www\compass.js">
       <PackagePath>www\plugins\cordova-plugin-device-orientation\www\compass.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.098</Modified>
+      <Modified>2016-06-18T23:57:42.689</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-device-orientation\www\CompassError.js">
       <PackagePath>www\plugins\cordova-plugin-device-orientation\www\CompassError.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.104</Modified>
+      <Modified>2016-06-18T23:57:42.689</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-device-orientation\www\CompassHeading.js">
       <PackagePath>www\plugins\cordova-plugin-device-orientation\www\CompassHeading.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.105</Modified>
+      <Modified>2016-06-18T23:57:42.690</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-dialogs\src\windows\NotificationProxy.js">
       <PackagePath>www\plugins\cordova-plugin-dialogs\src\windows\NotificationProxy.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.113</Modified>
+      <Modified>2016-06-18T23:57:42.691</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-dialogs\www\notification.js">
       <PackagePath>www\plugins\cordova-plugin-dialogs\www\notification.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.119</Modified>
+      <Modified>2016-06-18T23:57:42.691</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\src\windows\GeolocationProxy.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\src\windows\GeolocationProxy.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.120</Modified>
+      <Modified>2016-06-18T23:57:42.692</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\www\Coordinates.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\www\Coordinates.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.129</Modified>
+      <Modified>2016-06-18T23:57:42.693</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\www\geolocation.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\www\geolocation.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.142</Modified>
+      <Modified>2016-06-18T23:57:42.705</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\www\Position.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\www\Position.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.143</Modified>
+      <Modified>2016-06-18T23:57:42.706</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\www\PositionError.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\www\PositionError.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.144</Modified>
+      <Modified>2016-06-18T23:57:42.712</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-sqlite-storage\src\windows\sqlite-proxy.js">
       <PackagePath>www\plugins\cordova-sqlite-storage\src\windows\sqlite-proxy.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.145</Modified>
+      <Modified>2016-06-18T23:57:42.712</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-sqlite-storage\src\windows\SQLite3-Win-RT\SQLite3JS\js\SQLite3.js">
       <PackagePath>www\plugins\cordova-sqlite-storage\src\windows\SQLite3-Win-RT\SQLite3JS\js\SQLite3.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.155</Modified>
+      <Modified>2016-06-18T23:57:42.713</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-sqlite-storage\www\SQLitePlugin.js">
       <PackagePath>www\plugins\cordova-sqlite-storage\www\SQLitePlugin.js</PackagePath>
-      <Modified>2016-06-18T02:26:21.187</Modified>
+      <Modified>2016-06-18T23:57:42.745</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\index.js">
       <PackagePath>www\scripts\index.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.095</Modified>
+      <Modified>2016-06-18T23:57:41.680</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\app.js">
       <PackagePath>www\scripts\model\app.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.097</Modified>
+      <Modified>2016-06-18T23:57:41.682</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\course.js">
       <PackagePath>www\scripts\model\course.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.098</Modified>
+      <Modified>2016-06-18T23:57:41.717</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\database.js">
       <PackagePath>www\scripts\model\database.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.099</Modified>
+      <Modified>2016-06-18T23:57:41.738</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\disc.js">
       <PackagePath>www\scripts\model\disc.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.100</Modified>
+      <Modified>2016-06-18T23:57:41.739</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\player.js">
       <PackagePath>www\scripts\model\player.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.101</Modified>
+      <Modified>2016-06-18T23:57:41.740</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\position.js">
       <PackagePath>www\scripts\model\position.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.102</Modified>
+      <Modified>2016-06-18T23:57:41.741</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\round.js">
+      <PackagePath>www\scripts\model\round.js</PackagePath>
+      <Modified>2016-06-18T23:57:41.742</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\platformOverrides.js">
       <PackagePath>www\scripts\platformOverrides.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.449</Modified>
+      <Modified>2016-06-18T23:57:42.126</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\view.js">
       <PackagePath>www\scripts\view.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.104</Modified>
+      <Modified>2016-06-18T23:57:41.760</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\winstore-jscompat.js">
       <PackagePath>www\scripts\winstore-jscompat.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.452</Modified>
+      <Modified>2016-06-18T23:57:42.128</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\WinJS\js\base.js">
       <PackagePath>www\WinJS\js\base.js</PackagePath>
-      <Modified>2016-06-18T02:26:20.446</Modified>
+      <Modified>2016-06-18T23:57:42.121</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\css\index.css">
       <PackagePath>www\css\index.css</PackagePath>
-      <Modified>2016-06-18T02:26:20.790</Modified>
+      <Modified>2016-06-18T23:57:42.405</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\css\platform.css">
+      <PackagePath>www\css\platform.css</PackagePath>
+      <Modified>2016-06-18T23:57:42.124</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\js\jquery-1.5.0.mobile.min.css">
       <PackagePath>www\js\jquery-1.5.0.mobile.min.css</PackagePath>
-      <Modified>2016-06-18T02:26:21.012</Modified>
+      <Modified>2016-06-18T23:57:42.617</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\index.html">
       <PackagePath>www\index.html</PackagePath>
-      <Modified>2016-06-18T02:26:20.791</Modified>
+      <Modified>2016-06-18T23:57:42.406</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\config.xml">
       <PackagePath>config.xml</PackagePath>
-      <Modified>2016-06-18T02:26:19.866</Modified>
+      <Modified>2016-06-18T23:57:41.437</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\build\windows\debug\x64\win8.1\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2016-06-18T02:26:22.043</Modified>
+      <Modified>2016-06-18T23:57:43.631</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

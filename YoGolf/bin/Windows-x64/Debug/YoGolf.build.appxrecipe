@@ -142,6 +142,9 @@
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\position.js">
       <PackagePath>www\scripts\model\position.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\round.js">
+      <PackagePath>www\scripts\model\round.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\platformOverrides.js">
       <PackagePath>www\scripts\platformOverrides.js</PackagePath>
     </AppxPackagedFile>
@@ -156,6 +159,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\css\index.css">
       <PackagePath>www\css\index.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\css\platform.css">
+      <PackagePath>www\css\platform.css</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\js\jquery-1.5.0.mobile.min.css">
       <PackagePath>www\js\jquery-1.5.0.mobile.min.css</PackagePath>

@@ -97,6 +97,22 @@ h2 .distance {
     text-align: center;
 }
 
+.path tr:nth-child(1) {
+    width: 15%;
+}
+.path tr:nth-child(2) {
+    width: 15%;
+}
+.path tr:nth-child(3) {
+    width: 15%;
+}
+.path tr:nth-child(4) {
+    width: 15%;
+}
+.path tr:nth-child(5) {
+    width: 40%;
+}
+
 .event {
     border-radius:4px;
     -webkit-border-radius:4px;

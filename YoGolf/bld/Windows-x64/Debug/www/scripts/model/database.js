@@ -41,6 +41,10 @@
                 "CREATE TABLE IF NOT EXISTS layout(gid int default null, name, course int, state int default 0);",
                 "CREATE TABLE IF NOT EXISTS path(gid int default null, number int, layout int, basket int, tee int, par int, description text, state int default 0);",
                 "CREATE TABLE IF NOT EXISTS app_info(version int, updated datetime DEFAULT CURRENT_TIMESTAMP);",
+
+                "CREATE TABLE IF NOT EXISTS round (gid int default null, layout int, start datetime, end datetime DEFAULT CURRENT_TIMESTAMP, hole_number int)",
+                "CREATE TABLE IF NOT EXISTS score (gid int default null, player int, throws int, round int, path int)",
+
                 "INSERT INTO app_info (version) VALUES (1);",
                 "INSERT INTO course (name, latitude, longitude) VALUES ('Nučice', 50.021287, 14.2269195);",
                 "INSERT INTO tee (name, latitude, longitude) VALUES ('1', 50.0208542, 14.2297044);",
@@ -101,6 +105,45 @@
             ],
             function () { console.log("db created"); },
             function (error) { Panic(error.message); }
+        );
+    }
+}
+
+function Model() { };
+
+Model.Save = function (item, callback) {
+    callback = callback || function () { }
+
+    var data = item.getData();
+
+    var columns = Object.keys(data);
+
+    var questionmarks = columns.map(function () { return '?'; });
+    var values = columns.map(function (value) { return data[value] });
+
+    if (item.rowid == null) {
+        App.db.executeSql(
+            "INSERT INTO " + item.tableName() + " (" + columns.join(", ") + ") VALUES (" + questionmarks.join(", ") + ");",
+            values,
+            function (resultSet) {
+                item.rowid = resultSet.insertId;
+                callback(item);
+            },
+            function (error) {
+                Panic(error.message);
+            }
+        );
+    } else {
+        App.db.executeSql(
+            "UPDATE " + item.tableName() + " SET " + columns.map(function (key) { return key + " = ?"; }).join(", ") + " WHERE rowid = ?;",
+            values.concat([item.rowid]),
+            function (resultSet) {
+                console.log(resultSet);
+                callback(item);
+            },
+            function (error) {
+                Panic(error.message);
+            }
         );
     }
 }

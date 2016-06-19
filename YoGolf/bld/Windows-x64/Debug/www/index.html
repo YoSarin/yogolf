@@ -11,6 +11,7 @@
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/platform.css">
 		<link rel="stylesheet" type="text/css" href="js/jquery-1.5.0.mobile.min.css">
 		<style>
 		/* For avoiding title truncation in wp8 */
@@ -31,14 +32,14 @@
     <!-- Starting page -->
     <div data-role="page" id="start">
         <div data-role="header">
-            <h1>Start</h1>
+            <h1>Welcome</h1>
         </div>
         <div role="main" class="ui-content">
-            <p>Page 1 content goes here</p>
-            <a href="#courses">Goto courses</a>
+            <p>Welcome!</p>
         </div>
+        <a href="#courses">Let's go!</a>
         <div data-role="footer" data-position="fixed">
-            <h4>Page 1 Footer</h4>
+            <h4>YoGolf</h4>
         </div>
     </div>    <!-- Courses - list of your discs -->
     <div data-role="page" id="courses">
@@ -47,10 +48,9 @@
         </div>
         <div role="main" class="ui-content">
             <div class="content"></div>
-            <a href="#start">Goto start</a>
         </div>
         <div data-role="footer" data-position="fixed">
-            <h4>Page 2 Footer</h4>
+            <h4>Let's go discgolfin'!</h4>
         </div>
     </div>
     
@@ -61,13 +61,25 @@
         </div>
         <div role="main" class="ui-content">
             <div class="content"></div>
-            <a href="#courses">Goto Courses</a>
         </div>
         <div data-role="footer" data-position="fixed">
-            <h4>Page 2 Footer</h4>
+            <h4>What a nice course layout, wanna play?</h4>
         </div>
     </div>
     
+    <!-- Round -->
+    <div data-role="page" id="round">
+        <div data-role="header">
+            <h1>Round</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="content"></div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4>Par is for loosers. We need Birdie!<br />Or Albatros!<br />Or ACE!</h4>
+        </div>
+    </div>
+
     <!-- Bag - list of your discs -->
     <div data-role="page" id="bag">
         <div data-role="header">
@@ -75,7 +87,6 @@
         </div>
         <div role="main" class="ui-content">
             <h4>Page 2 content goes here</h4>
-            <a href="#start">Goto start</a>
         </div>
         <div data-role="footer" data-position="fixed">
             <h4>Page 2 Footer</h4>
@@ -88,7 +99,7 @@
             <h1>Error</h1>
         </div>
         <div role="main" class="ui-content">
-            <ul class="error-list"></ul>
+            <div class="error-list"></div>
             <div>Try to close and reopen application, if it helps</div>
         </div>
         <div data-role="footer" data-position="fixed">
@@ -96,7 +107,7 @@
         </div>
     </div>
     <div id="templates">
-        <svg class="compass require_GPS" width="20" height="20">
+        <svg class="compass require_HEADING hidden" width="20" height="20">
             <circle cx="10" cy="10" r="3" stroke="black" stroke-width="1" fill="white" />
             <line class="pointer" x1="10" y1="10" x2="10" y2="10" style="stroke:rgb(255,0,0);stroke-width:1" />
         </svg>
@@ -118,6 +129,7 @@
     <script type="text/javascript" src="scripts/view.js"></script>
     <script type="text/javascript" src="scripts/model/disc.js"></script>
     <script type="text/javascript" src="scripts/model/course.js"></script>
+    <script type="text/javascript" src="scripts/model/round.js"></script>
     <script type="text/javascript" src="scripts/model/player.js"></script>
     <script type="text/javascript" src="scripts/model/database.js"></script>
     <script type="text/javascript" src="scripts/model/app.js"></script>

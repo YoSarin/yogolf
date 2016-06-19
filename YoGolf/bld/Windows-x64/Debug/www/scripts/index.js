@@ -18,7 +18,10 @@ var App;
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
         WithDatabase(function (db) {
             App = new YoGolf(db);
-            App.Courses();
+            document.addEventListener('backbutton', function () { App.goBack(); }, false);
+
+            App.LoadPlayers();
+            View.Courses();
         });
         
         Coord.Test();

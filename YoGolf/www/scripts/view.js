@@ -105,18 +105,20 @@ View.Round = function (round) {
                     .append(
                         $("<tr>")
                             .append($("<th>").text("#"))
-                            .append($("<th>").text("Par"))
-                            .append($("<th>").text("Length"))
                             .append($("<th>").text("Tee"))
                             .append($("<th>").text("Basket"))
+                            .append($("<th>").text("Par"))
+                            .append($("<th>").text("Length"))
+                            .append($("<th>").text("Description"))
                     )
                     .append(
                         $("<tr>")
-                            .append($("<td>").text(path.number))
+                            .append($("<td>").text(path.number + '/' + path.layout.paths.length))
+                            .append($("<td>").text(path.tee.name))
+                            .append($("<td>").text(path.basket.name))
                             .append($("<td>").text(path.par))
                             .append($("<td>").text(path.distance().toFixed(0)))
-                            .append($("<td>").addClass("showDistance").addClass("showCompass").attr("coords", path.tee.coord()))
-                            .append($("<td>").addClass("showDistance").addClass("showCompass").attr("coords", path.basket.coord()))
+                            .append($("<td>").text(path.description))
                     )
             )
             .append($('<div class="padded blue next button">Next</div>'));
@@ -133,6 +135,14 @@ View.Round = function (round) {
             round.moveToPrev();
             View.Round(round);
         });
+
+        $("#round h1.header").html(path.layout.course.name + ' <small>' + path.layout.name + '</small>');
+
+        $("#round h4.footer")
+            .text("Tee: ")
+            .append($('<span class="showCompass showDistance" coords="' + path.tee.coord().toString() + '">'))
+            .append(" | Basket: ")
+            .append($('<span class="showCompass showDistance" coords="' + path.basket.coord().toString() + '">'));
     } else {
         $("#round .content")
             .append($("<h2>").text("No more throws to do!"))
@@ -145,12 +155,7 @@ View.Round = function (round) {
             navigator.notification.prompt(
                 "Okay, what is its par?",
                 function (prompt) {
-                    p = Path.NewFromPrompt(prompt, round.hole_number, round.layout);
-                    if (p) {
-                        navigator.notification.prompt("Go to the tee, confirm its location and name it.", function (button) {
-                            Tee.NewFromPrompt(prompt, function (tee) { p.tee = tee; p.Save(View.Round(round)); });
-                        }, "Locate the tee!", ["Yup, I'm standing on tee", "Screw it, no more tees"])
-                    }
+                    p = Path.NewFromPrompt(prompt, round.hole_number, round.layout, function () { View.Round(round); } );
                 },
                 "Then lets add it!", ["Ok", "Cancel"], 3);
         });
