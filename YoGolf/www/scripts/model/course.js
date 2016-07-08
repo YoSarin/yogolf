@@ -8,61 +8,41 @@ function Course() {
     this.name = null;
     this.longitude = null;
     this.latitude = null;
-    this.layouts = Array();
 }
 
 Course.prototype = {
 
-    Load: function (tx) {
+    tableName: function () {
+        return "course";
+    },
+    getData: function () {
+        return {
+            "name": this.name,
+            "latitude": this.latitude,
+            "longitude": this.longitude,
+        }
+    },
+/*
+    afterLoad: function (tx, callback) {
         var __self__ = this;
-        Layout.LoadForCourse(tx, this, function (layout) { __self__.layouts.push(layout); } );
+        var wg = new WaitGroup(callback, [__self__]);
+        wg.Add(1);
+        Layout.LoadForCourse(tx, this, function (layouts) {
+            __self__.layouts = (layouts);
+            wg.Done();
+        });
+    },
+*/
+    WithEachLayout: function (callback) {
+        Model.WithEach(Layout, callback, { course: this.rowid });
     },
 
     Save: function (callback) {
-        var __self__ = this;
-        callback = callback || function () { }
-        if (this.rowid == null) {
-            App.db.executeSql(
-                "INSERT INTO course (name, longitude, latitude) VALUES (?, ?, ?);",
-                [this.name, this.longitude, this.latitude],
-                function (resultSet) {
-                    __self__.rowid = resultSet.insertId;
-                    callback(__self__);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
-        } else {
-            App.db.executeSql(
-                "UPDATE course SET name = ?, longitude = ?, latitude = ? WHERE rowid = ?;",
-                [this.name, this.longitude, this.latitude, this.rowid],
-                function (resultSet) {
-                    console.log(resultSet);
-                    callback(__self__);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
-        }
+        Model.Save(this, callback);
     },
 
     Delete: function (callback) {
-        callback = callback || function () { };
-        if (this.rowid) {
-            App.db.executeSql(
-                "DELETE FROM course WHERE rowid = ?",
-                [this.rowid],
-                function (resultSet) {
-                    App.dbCleanup();
-                    callback(true);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
-        }
+        Model.Delete(this, callback);
     },
 
     DeleteWithConfirm: function (buttonPressed) {
@@ -110,34 +90,7 @@ Course.NewFromPrompt = function (prompt) {
 }
 
 Course.WithAll = function (callback) {
-    var courses = Array();
-
-    App.db.readTransaction(
-        function (tx) {
-            tx.executeSql(
-                "SELECT rowid, * FROM course ORDER BY name ASC;",
-                [],
-                function (tx, resultSet) {
-                    for (var k = 0; k < resultSet.rows.length; k++) {
-                        var item = new Course();
-                        item.rowid = resultSet.rows.item(k).rowid;
-                        item.name = resultSet.rows.item(k).name;
-                        item.longitude = resultSet.rows.item(k).longitude;
-                        item.latitude = resultSet.rows.item(k).latitude;
-                        item.Load(tx);
-                        courses.push(item);
-                    }
-                },
-                function (tx, error) {
-                    Panic(error.message);
-                }
-            );
-        }, function (error) {
-            Panic(error.message);
-        }, function () {
-            callback(courses);
-        }
-    );
+    Model.WithAll(Course, callback);
 }
 
 function Layout(name, course) {
@@ -148,55 +101,65 @@ function Layout(name, course) {
 }
 
 Layout.prototype = {
-    Load: function (tx) {
-        var __self__ = this;
-        Path.LoadForLayout(tx, this, function (path) { __self__.paths.push(path); });
+
+    tableName: function () {
+        return "layout";
     },
-    Save: function (callback) {
-        var __self__ = this;
-        callback = callback || function () { }
-        if (this.rowid == null) {
-            App.db.executeSql(
-                "INSERT INTO layout (name, course) VALUES (?, ?);",
-                [this.name, this.course.rowid],
-                function (resultSet) {
-                    __self__.rowid = resultSet.insertId;
-                    callback(__self__);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
-        } else {
-            App.db.executeSql(
-                "UPDATE layout SET name = ?, course = ? WHERE rowid = ?;",
-                [this.name, this.course.rowid, this.rowid],
-                function (resultSet) {
-                    console.log(resultSet);
-                    callback(__self__);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
+
+    getData: function () {
+        return {
+            "name": this.name,
+            "course": this.course,
         }
     },
 
-    Delete: function (callback) {
-        callback = callback || function () { };
-        if (this.rowid) {
-            App.db.executeSql(
-                "DELETE FROM layout WHERE rowid = ?",
-                [this.rowid],
-                function (resultSet) {
-                    App.dbCleanup();
-                    callback(true);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
+    /*
+    afterLoad: function (tx, callback) {
+        var __self__ = this;
+        var wg = new WaitGroup(callback, [__self__]);
+        wg.Add(2);
+        Path.LoadForLayout(tx, this, function (paths) {
+            __self__.paths = paths;
+            wg.Done();
+        });
+        if (typeof this.course == 'number') {
+            Model.WithOne(Course, this.course, function (course) {
+                __self__.course = course;
+                wg.Done();
+            });
+        } else {
+            wg.Done();
         }
+    },
+    */
+
+    WithCourse: function (callback) {
+        Model.WithOne(Course, this.course, callback);
+    },
+
+    WithPaths: function (callback) {
+        var __self__ = this;
+        Model.WithAll(Path, function (paths) {
+            __self__.paths = paths;
+            callback(paths);
+        }, { layout: this.rowid });
+    },
+
+    WithEachPath: function (callback) {
+        var __self__ = this;
+        __self__.paths = Array();
+        Model.WithEach(Path, function (path) {
+            __self__.paths.push(path);
+            callback(path);
+        }, { layout: this.rowid });
+    },
+
+    Save: function (callback) {
+        Model.Save(this, callback);
+    },
+
+    Delete: function (callback) {
+        Model.Delete(this, callback);
     },
 
     DeleteWithConfirm: function (buttonPressed) {
@@ -222,12 +185,15 @@ Layout.prototype = {
         });
         return par;
     },
-    length: function () {
-        var len = 0;
-        $.each(this.paths, function (k, v) {
-            len += v.distance();
+    WithLength: function (callback) {
+        var wg = new WaitGroup(callback, [0]);
+        wg.Add(this.paths.length);
+        $.each(this.paths, function (k, path) {
+            path.WithDistance(function (distance) {
+                wg.IncParam(0, distance);
+                wg.Done();
+            });
         });
-        return len;
     }
 }
 
@@ -238,7 +204,9 @@ Layout.New = function (name, course) {
 }
 
 Layout.LoadForCourse = function (tx, course, callback) {
-
+    var layouts = Array();
+    Model.WithDb(tx).WithAll(Layout, callback, { course: course.rowid });
+    /*
     tx.executeSql(
         "SELECT rowid, * FROM layout WHERE course = ? ORDER BY name ASC;",
         [course.rowid],
@@ -246,14 +214,17 @@ Layout.LoadForCourse = function (tx, course, callback) {
             for (var k = 0; k < resultSet.rows.length; k++) {
                 var item = new Layout(resultSet.rows.item(k).name, course);
                 item.rowid = resultSet.rows.item(k).rowid;
-                item.Load(tx);
-                callback(item);
+                item.afterLoad(tx, function (layout) {
+                    layouts.push(layout);
+                });
             }
+            callback(layouts);
         },
         function (tx, error) {
             Panic(error.message);
         }
     );
+    */
 }
 
 function Path(number, layout, basket, tee, par) {
@@ -278,15 +249,37 @@ Path.prototype = {
     getData: function () {
         return {
             "number": this.number,
-            "layout": this.layout.rowid,
-            "basket": this.basket.rowid || null,
-            "tee": this.tee.rowid || null,
+            "layout": this.layout,
+            "basket": this.basket || null,
+            "tee": this.tee || null,
             "par": this.par,
             "description": this.description,
         }
     },
-    distance: function () {
-        return this.tee.coord().distanceTo(this.basket.coord())
+    WithTee: function (callback) {
+        Model.WithOne(Tee, this.tee, callback);
+    },
+    WithLayout: function (callback) {
+        Model.WithOne(Layout, this.layout, callback);
+    },
+    WithBasket: function (callback) {
+        Model.WithOne(Basket, this.basket, callback);
+    },
+    WithDistance: function (callback) {
+        var wg = new WaitGroup(function (tee, basket) {
+            callback(tee.coord().distanceTo(basket.coord()));
+        }, [null, null]);
+
+        wg.Add(2);
+
+        this.WithTee(function (tee) {
+            wg.SetParam(0, tee);
+            wg.Done();
+        });
+        this.WithBasket(function (basket) {
+            wg.SetParam(1, basket);
+            wg.Done();
+        });
     },
     describe: function () {
         return '[' + this.number + '] ' + this.tee.name + ' ➟ ' + this.basket.name + ':  par ' + this.par + ' | ' + this.distance().toFixed(0) + ' meters | <span class="showCompass showDistance" coords="' + this.tee.coord().toString() + '"></span>';
@@ -311,22 +304,38 @@ Path.LoadForLayout = function (tx, layout, callback) {
     tx.executeSql(
         "SELECT rowid, * FROM path WHERE layout = ? ORDER BY number ASC;",
         [layout.rowid],
-        function (tx, resultSet) {
+        function (resultSetOrTx, maybeResultSet) {
             var paths = Array();
 
+            var resultSet = maybeResultSet || resultSetOrTx;
+            var wg = new WaitGroup(callback, [paths]);
+
+            wg.Add(resultSet.rows.length);
             for (var k = 0; k < resultSet.rows.length; k++) {
-                (function(row) {
-                    Basket.Load(tx, row.basket, function (basket) {
-                        Tee.Load(tx, row.tee, function (tee) {
-                            var item = new Path(row.number, layout, basket, tee, row.par);
-                            item.rowid = row.rowid;
-                            callback(item);
-                        })
+                var done = 0;
+                (function (row) {
+                    var wgPath = new WaitGroup(function (basket, tee, layout, number, par) {
+                        var path = new Path(number, layout, basket, tee, par);
+                        paths.push(path);
+                        wg.Done();
+                    }, [null, null, layout, row.number, row.par]);
+
+                    wgPath.Add(2);
+
+                    Basket.WithOne(row.basket, function (basket) {
+                        wgPath.SetParam(0, basket);
+                        wgPath.Done();
+                    });
+
+                    Tee.WithOne(row.tee, function (tee) {
+                        wgPath.SetParam(1, tee);
+                        wgPath.Done();
                     });
                 }) (resultSet.rows.item(k));
             }
         },
-        function (tx, error) {
+        function (errorOrTx, maybeError) {
+            var error = maybeError || errorOrTx;
             Panic(error.message);
         }
     );
@@ -376,21 +385,8 @@ Tee.NewFromPrompt = function (prompt, callback) {
     return null;
 }
 
-Tee.Load = function (tx, rowid, callback) {
-    tx.executeSql(
-        "SELECT rowid, * FROM tee WHERE rowid = ?;",
-        [rowid],
-        function (tx, resultSet) {
-            for (var k = 0; k < resultSet.rows.length; k++) {
-                var t = new Tee(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude);
-                t.rowid = resultSet.rows.item(k).rowid;
-                callback(t);
-            }
-        },
-        function (tx, error) {
-            Panic(error.message);
-        }
-    );
+Tee.WithOne = function (rowid, callback) {
+    Model.WithOne(Tee, rowid, callback);
 }
 
 function Basket(name, latitude, longitude) {
@@ -423,21 +419,8 @@ Basket.prototype = {
     }
 }
 
-Basket.Load = function (tx, rowid, callback) {
-    tx.executeSql(
-        "SELECT rowid, * FROM basket WHERE rowid = ?;",
-        [rowid],
-        function (tx, resultSet) {
-            for (var k = 0; k < resultSet.rows.length; k++) {
-                var b = new Basket(resultSet.rows.item(k).name, resultSet.rows.item(k).latitude, resultSet.rows.item(k).longitude)
-                b.rowid = resultSet.rows.item(k).rowid;
-                callback(b);
-            }
-        },
-        function (tx, error) {
-            Panic(error.message);
-        }
-    );
+Basket.WithOne = function (rowid, callback) {
+    Model.WithOne(Basket, rowid, callback);
 }
 
 

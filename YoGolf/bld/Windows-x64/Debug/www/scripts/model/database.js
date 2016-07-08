@@ -1,26 +1,34 @@
 ﻿function WithDatabase(callback) {
     var __self__ = this;
+    this.db = null;
+    this.version = null;
 
     window.sqlitePlugin.openDatabase(
         { name: 'yogolf.db', location: 'default' },
-        function (db) { console.log("DB opened"); __self__.init(db); },
+        function (db) {
+            console.log("DB opened");
+            __self__.init(db);
+        },
         function () { Panic("DB open failed"); }
     );
 
     this.init = function (db) {
-        __self__.db = db
+        __self__.db = db;
         console.log("DB init");
         db.transaction(function (tx) {
             tx.executeSql(
-                "SELECT * FROM app_info ORDER BY version DESC LIMIT 1;",
+                "SELECT rowid, * FROM app_info ORDER BY version DESC LIMIT 1;",
                 [],
                 function (tx, resultSet) {
                     console.log("Tables are there");
-                    callback(db);
+                    for (var k = 0; k < resultSet.rows.length; k++) {
+                        __self__.update(db, Model.WithDb(db).Fill(Version, resultSet.rows.item(k)), callback);
+                    }
                 },
                 function (tx, error) {
-                    __self__.create(db);
-                    callback(db);
+                    __self__.create(db, function () {
+                        __self__.init(db);
+                    });
                     return false;
                 })
             ;
@@ -29,7 +37,7 @@
         });
     }
 
-    this.create = function (db) {
+    this.create = function (db, callback) {
         console.log("creating tables");
 
         db.sqlBatch(
@@ -42,8 +50,12 @@
                 "CREATE TABLE IF NOT EXISTS path(gid int default null, number int, layout int, basket int, tee int, par int, description text, state int default 0);",
                 "CREATE TABLE IF NOT EXISTS app_info(version int, updated datetime DEFAULT CURRENT_TIMESTAMP);",
 
-                "CREATE TABLE IF NOT EXISTS round (gid int default null, layout int, start datetime, end datetime DEFAULT CURRENT_TIMESTAMP, hole_number int)",
+                "CREATE TABLE IF NOT EXISTS round (gid int default null, layout int, start datetime, end datetime DEFAULT CURRENT_TIMESTAMP, hole_number int, finished boolean default false)",
                 "CREATE TABLE IF NOT EXISTS score (gid int default null, player int, throws int, round int, path int)",
+
+                "INSERT INTO player (name, email) VALUES ('Martin', 'martin@yosarin.net')",
+                "INSERT INTO player (name, email) VALUES ('Lída', 'lidalejsal@gmail.com')",
+                "INSERT INTO player (name, email) VALUES ('Petr', 'pzaloha@volny.cz')",
 
                 "INSERT INTO app_info (version) VALUES (1);",
                 "INSERT INTO course (name, latitude, longitude) VALUES ('Nučice', 50.021287, 14.2269195);",
@@ -103,47 +115,261 @@
                 "INSERT INTO path (number, layout, tee, basket, par) VALUES (4, 3, 13, 13, 3);",
 
             ],
-            function () { console.log("db created"); },
+            function () { console.log("db created"); callback(); },
             function (error) { Panic(error.message); }
         );
     }
+
+    this.update = function (db, version, callback) {
+        this.version = version || new Version(1);
+        var __self__ = this;
+
+        Model.onSave(this.version, function (item) {
+            __self__.update(db, item, callback);
+        });
+
+        console.log("Version: " + __self__.version.version + "; checking for updates;");
+
+        switch (__self__.version.version) {
+            case null:
+            case 1:
+                /*
+                console.log("Updating way how tees and baskets");
+                __self__.version.version = 2;
+                Model.WithDb(db).Save(__self__.version);
+                return;
+                */
+            default:
+                console.log("No more updates!");
+        }
+
+        $(".dbVersion").html(__self__.version.version);
+
+        callback(db);
+    }
 }
 
-function Model() { };
+function WaitGroup(callback, params) {
+    this.count = 0;
+    this.callback = callback || function () { };
+    this.params = params || Array();
+
+    this.Add = function (count) {
+        count = count || 1;
+        this.count += count;
+    }
+
+    this.SetParam = function (position, value) {
+        this.params[position] = value;
+    }
+    this.IncParam = function (position, value) {
+        this.params[position] += value;
+    }
+
+    this.Done = function () {
+        this.count--;
+        if (this.count == 0) {
+            this.callback.apply(null, this.params);
+        }
+    }
+}
+
+function Version(ver) {
+
+    this.version = ver;
+    this.rowid = null;
+
+    this.tableName = function () {
+        return "app_info";
+    }
+
+    this.getData = function () {
+        return {"version" : this.version }
+    }
+
+}
+
+function Model(db) {
+
+    this.db = db;
+
+    this.DB = function () {
+        return this.db;
+    }
+
+    this.Delete = function (item, callback) {
+        callback = callback || function () { };
+        if (item.rowid) {
+            this.DB().executeSql(
+                "DELETE FROM " + item.tableName() + " WHERE rowid = ?",
+                [item.rowid],
+                function (resultSet) {
+                    App.dbCleanup();
+                    callback(true);
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        }
+    }
+
+    this.Save = function (item, callback) {
+        callback = callback || function () { }
+
+        var data = item.getData();
+
+        var columns = Object.keys(data);
+
+        var questionmarks = columns.map(function () { return '?'; });
+        var values = columns.map(function (value) { return data[value] });
+
+        if (item.rowid == null) {
+            this.DB().executeSql(
+                "INSERT INTO " + item.tableName() + " (" + columns.join(", ") + ") VALUES (" + questionmarks.join(", ") + ");",
+                values,
+                function (resultSet) {
+                    item.rowid = resultSet.insertId;
+                    callback(item);
+                    if (item.__callbacks && item.__callbacks.onSave) {
+                        item.__callbacks.onSave(item);
+                    }
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        } else {
+            this.DB().executeSql(
+                "UPDATE " + item.tableName() + " SET " + columns.map(function (key) { return key + " = ?"; }).join(", ") + " WHERE rowid = ?;",
+                values.concat([item.rowid]),
+                function (resultSet) {
+                    console.log(resultSet);
+                    callback(item);
+                    if (item.__callbacks && item.__callbacks.onSave) {
+                        item.__callbacks.onSave(item);
+                    }
+                },
+                function (error) {
+                    Panic(error.message);
+                }
+            );
+        }
+    }
+
+    this.WithAll = function (model, callback, filter) {
+        this.WithEach(model, null, filter, callback);
+    }
+
+    this.WithEach = function (model, callback, filter, finalCallback) {
+        filter = filter || {};
+        finalCallback = finalCallback || function (items) { };
+        callback = callback || function (item) { };
+
+        var tmp = new model();
+        var __self__ = this;
+        var params = Array();
+        var query = 'SELECT rowid, * FROM ' + tmp.tableName();
+
+        var items = Array();
+
+        var wg = new WaitGroup(finalCallback, [items]);
+
+        var whereClause = Object.keys(filter).map(function (column) { params.push(filter[column]); return column + ' = ?'; });
+        if (whereClause.length > 0) {
+            query += " WHERE " + whereClause.join(", ");
+        }
+        console.log(query, params);
+        this.DB().executeSql(
+            query,
+            params,
+            function (resultSetOrTx, maybeResultset) {
+                var resultSet = maybeResultset || resultSetOrTx;
+                wg.Add(resultSet.rows.length);
+                for (var k = 0; k < resultSet.rows.length; k++) {
+                    __self__.Fill(model, resultSet.rows.item(k), function (item) {
+                        items.push(item);
+                        wg.Done();
+                        callback(item);
+                    });
+                }
+            },
+            function (errorOrTx, maybeError) {
+                var error = maybeError || errorOrTx;
+                Panic(error.message);
+            }
+        )
+    }
+
+    this.WithOne = function (model, rowid, callback) {
+        var tmp = new model();
+        var __self__ = this;
+        this.DB().executeSql(
+            'SELECT rowid, * FROM ' + tmp.tableName() + ' WHERE rowid = ?',
+            [rowid],
+            function (resultSet) {
+                for (var k = 0; k < resultSet.rows.length; k++) {
+                    __self__.Fill(model, resultSet.rows.item(k), callback);
+                }
+            },
+            function (error) {
+                Panic(error.message);
+            }
+        )
+    }
+
+    this.Fill = function (model, row, callback) {
+        callback = callback || function () { }
+        var m = new model();
+        $.each(row, function (col, val) {
+            m[col] = val;
+        });
+        if (m.afterLoad) {
+            // we rely, that afterLoad method accepts as a input parameter either DB or transaction !!! BEWARE of differencies between transaction and database in callbacks
+            m.afterLoad(
+                this.DB(),
+                callback
+            );
+        } else {
+            callback(m);
+        }
+    }
+
+};
+
+Model.cache = {};
+
+Model.WithDb = function (db) {
+    return new Model(db);
+}
+
+Model.onSave = function (item, callback) {
+    if (!item.__callbacks) {
+        item.__callbacks = {};
+    }
+    item.__callbacks["onSave"] = callback;
+}
+
+Model.Delete = function (item, callback) {
+    Model.WithDb(App.db).Delete(item, callback);
+}
 
 Model.Save = function (item, callback) {
-    callback = callback || function () { }
+    Model.WithDb(App.db).Save(item, callback);
+}
 
-    var data = item.getData();
+Model.WithAll = function (model, callback, filter) {
+    Model.WithDb(App.db).WithAll(model, callback, filter);
+}
 
-    var columns = Object.keys(data);
+Model.WithEach = function (model, callback, filter) {
+    Model.WithDb(App.db).WithEach(model, callback, filter);
+}
 
-    var questionmarks = columns.map(function () { return '?'; });
-    var values = columns.map(function (value) { return data[value] });
+Model.WithOne = function (model, rowid, callback) {
+    Model.WithDb(App.db).WithOne(model, rowid, callback);
+}
 
-    if (item.rowid == null) {
-        App.db.executeSql(
-            "INSERT INTO " + item.tableName() + " (" + columns.join(", ") + ") VALUES (" + questionmarks.join(", ") + ");",
-            values,
-            function (resultSet) {
-                item.rowid = resultSet.insertId;
-                callback(item);
-            },
-            function (error) {
-                Panic(error.message);
-            }
-        );
-    } else {
-        App.db.executeSql(
-            "UPDATE " + item.tableName() + " SET " + columns.map(function (key) { return key + " = ?"; }).join(", ") + " WHERE rowid = ?;",
-            values.concat([item.rowid]),
-            function (resultSet) {
-                console.log(resultSet);
-                callback(item);
-            },
-            function (error) {
-                Panic(error.message);
-            }
-        );
-    }
+Model.Fill = function (model, row, callback) {
+    return Model.WithDb(App.db).Fill(model, row, callback);
 }

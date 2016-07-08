@@ -1,6 +1,7 @@
-﻿function YoGolf(db) {
+﻿function YoGolf(db, locale) {
     var __self__ = this;
     this.db = db
+    this.locale = locale;
 
     this.heading = null;
     this.position = null;
@@ -21,59 +22,78 @@ YoGolf.prototype = {
     },
     AddToHistory: function (callback, params) {
         var place = this.history.length - 1;
-        if (place < 0 || (this.history[place]['callback'] != callback && this.history[place]['params'] != params)) {
+        if (place < 0 || this.history[place]['callback'] != callback || this.history[place]['params'] != params) {
             this.history.push({ 'callback': callback, 'params': params });
         }
     },
     goBack: function () {
         if (this.history.length > 1) {
             var current = this.history.pop();
-            var fn = this.history[this.history.length - 1]['callback'];
-            var params = this.history[this.history.length - 1]['params'];
-            fn.apply(params);
+            var moveTo = this.history.pop();
+            var fn = moveTo['callback'];
+            var params = moveTo['params'];
+            fn.apply(null, params);
         }
     },
+    reload: function () {
+        if (this.history.length > 0) {
+            var moveTo = this.history.pop();
+            var fn = moveTo['callback'];
+            var params = moveTo['params'];
+            fn.apply(null, params);
+        }
+    },
+    playerByEmail: function (email) {
+        var user = null;
+        $.each(this.players, function (k, player) {
+            if (player.email == email) {
+                user = player;
+                return;
+            }
+        });
+        return user;
+    },
     watchHeading: function (backoff) {
+        var __self__ = this;
         var backoff =  Math.min((backoff || 0.5) * 2, 64);
         navigator.compass.getCurrentHeading(
             function (heading) {
-                App.heading = heading;
-                if (App.position) {
-                    View.refreshHeading(App.position, heading);
+                __self__.heading = heading;
+                if (__self__.position) {
+                    View.refreshHeading(__self__.position, heading);
                 }
-                setTimeout(function () { App.watchHeading(); }, 250);
+                setTimeout(function () { __self__.watchHeading(); }, 250);
             }, function (error) {
                 console.log(error);
-                App.heading = null;
-                setTimeout(function () { App.watchHeading(backoff); }, backoff * 250);
+                __self__.heading = null;
+                setTimeout(function () { __self__.watchHeading(backoff); }, backoff * 250);
             }
         );
     },
     watchLocation: function (backoff) {
+        var __self__ = this;
         var options = { enableHighAccuracy: true, timeout: 5000
         };
         var backoff = Math.min((backoff || 0.5) * 2, 64);
         navigator.geolocation.getCurrentPosition(function (position) {
-            App.position = position;
+            __self__.position = position;
             View.refreshDistance(position);
-            setTimeout(App.watchLocation, 250);
+            setTimeout(__self__.watchLocation, 250);
         }, function (error) {
             console.log(error);
-            App.position = null;
-            setTimeout(function () { App.watchLocation(backoff); }, backoff * 250);
+            __self__.position = null;
+            setTimeout(function () { __self__.watchLocation(backoff); }, backoff * 250);
         }, options);
     },
-        dbCleanup: function () {
-            this.db.sqlBatch([
+    dbCleanup: function () {
+        this.db.sqlBatch([
                 "DELETE FROM layout WHERE course NOT IN (SELECT rowid FROM course);",
                 "DELETE FROM path WHERE layout NOT IN (SELECT rowid FROM layout);",
                 "DELETE FROM tee WHERE rowid NOT IN (SELECT tee FROM path);",
                 "DELETE FROM basket WHERE rowid NOT IN (SELECT basket FROM path);",
             ],
-                function () {
-            },
-                function (error) { console.log("cleanup failed " +error.message);
-            }
+            function () {},
+            function (error) { console.log("cleanup failed " + error.message); }
         );
     }
 }

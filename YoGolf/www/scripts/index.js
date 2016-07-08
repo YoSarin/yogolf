@@ -17,11 +17,16 @@ var App;
 
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
         WithDatabase(function (db) {
-            App = new YoGolf(db);
-            document.addEventListener('backbutton', function () { App.goBack(); }, false);
+            navigator.globalization.getLocaleName(function (locale) {
+                App = new YoGolf(db, locale);
+                document.addEventListener('backbutton', function () { App.goBack(); }, false);
 
-            App.LoadPlayers();
-            View.Courses();
+                App.LoadPlayers();
+                View.Courses();
+            }, function () {
+                Panic('Locales failed!');
+            });
+            
         });
         
         Coord.Test();

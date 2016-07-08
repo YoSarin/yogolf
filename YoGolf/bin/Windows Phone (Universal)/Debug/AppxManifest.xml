@@ -57,6 +57,12 @@
         <ActivatableClass ActivatableClassId="SQLite3.Database" ThreadingModel="both" />
       </InProcessServer>
     </Extension>
+    <Extension Category="windows.activatableClass.inProcessServer">
+      <InProcessServer>
+        <Path>CLRHost.dll</Path>
+        <ActivatableClass ActivatableClassId="GlobalizationProxy.GlobalizationProxy" ThreadingModel="both" />
+      </InProcessServer>
+    </Extension>
   </Extensions>
   <build:Metadata>
     <build:Item Name="SharedGUID" Value="9ebdb27f-d75b-4d8c-b53f-7be4a1fe89f9" />

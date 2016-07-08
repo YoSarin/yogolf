@@ -18,6 +18,9 @@
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\plugins\cordova-plugin-globalization\GlobalizationProxy.winmd">
+      <PackagePath>GlobalizationProxy.winmd</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\plugins\cordova-sqlite-storage\src\windows\SQLite3-Win-RT\SQLite3\SQLite3.Windows\x64\debug\SQLite3.Windows\SQLite3.winmd">
       <PackagePath>SQLite3.winmd</PackagePath>
     </AppxPackagedFile>
@@ -112,6 +115,15 @@
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-geolocation\www\PositionError.js">
       <PackagePath>www\plugins\cordova-plugin-geolocation\www\PositionError.js</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-globalization\src\windows\GlobalizationProxy.js">
+      <PackagePath>www\plugins\cordova-plugin-globalization\src\windows\GlobalizationProxy.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-globalization\www\globalization.js">
+      <PackagePath>www\plugins\cordova-plugin-globalization\www\globalization.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-plugin-globalization\www\GlobalizationError.js">
+      <PackagePath>www\plugins\cordova-plugin-globalization\www\GlobalizationError.js</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\plugins\cordova-sqlite-storage\src\windows\sqlite-proxy.js">
       <PackagePath>www\plugins\cordova-sqlite-storage\src\windows\sqlite-proxy.js</PackagePath>
     </AppxPackagedFile>
@@ -123,6 +135,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\index.js">
       <PackagePath>www\scripts\index.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\jquery_extensions.js">
+      <PackagePath>www\scripts\jquery_extensions.js</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\yosarin\src\github.com\martin-reznik\yogolf\YoGolf\platforms\windows\www\scripts\model\app.js">
       <PackagePath>www\scripts\model\app.js</PackagePath>

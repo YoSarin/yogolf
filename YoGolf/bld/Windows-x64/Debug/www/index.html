@@ -39,9 +39,10 @@
         </div>
         <a href="#courses">Let's go!</a>
         <div data-role="footer" data-position="fixed">
-            <h4>YoGolf</h4>
+            <h4>YoGolf v<small class="dbVersion"></small></h4>
         </div>
-    </div>    <!-- Courses - list of your discs -->
+    </div> 
+    <!-- Courses - list of courses -->
     <div data-role="page" id="courses">
         <div data-role="header">
             <h1>Courses</h1>
@@ -50,7 +51,7 @@
             <div class="content"></div>
         </div>
         <div data-role="footer" data-position="fixed">
-            <h4>Let's go discgolfin'!</h4>
+            <h4>Let's go discgolfin'! v<small class="dbVersion"></small></h4>
         </div>
     </div>
     
@@ -63,20 +64,34 @@
             <div class="content"></div>
         </div>
         <div data-role="footer" data-position="fixed">
-            <h4>What a nice course layout, wanna play?</h4>
+            <h4>What a nice course layout, wanna play? v<small class="dbVersion"></small></h4>
         </div>
     </div>
     
     <!-- Round -->
     <div data-role="page" id="round">
         <div data-role="header">
-            <h1>Round</h1>
+            <h1 class="header">Round</h1>
         </div>
         <div role="main" class="ui-content">
             <div class="content"></div>
         </div>
         <div data-role="footer" data-position="fixed">
-            <h4>Par is for loosers. We need Birdie!<br />Or Albatros!<br />Or ACE!</h4>
+            <div class="footer"></div>
+            <h4 class="footer">Par is for loosers. We need Birdie!<br />Or Albatros!<br />Or ACE! v<small class="dbVersion"></small></h4>
+        </div>
+    </div>
+    
+    <!-- Rounds -->
+    <div data-role="page" id="rounds">
+        <div data-role="header">
+            <h1 class="header">Round list</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="content"></div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h4 class="footer">Par is for loosers. We need Birdie!<br />Or Albatros!<br />Or ACE! v<small class="dbVersion"></small></h4>
         </div>
     </div>
 
@@ -103,7 +118,7 @@
             <div>Try to close and reopen application, if it helps</div>
         </div>
         <div data-role="footer" data-position="fixed">
-            <h4>Sorry for that :(</h4>
+            <h4>Sorry for that :( v<small class="dbVersion"></small></h4>
         </div>
     </div>
     <div id="templates">
@@ -123,6 +138,7 @@
 		    });
     </script>
     <script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery_extensions.js"></script>
     <script type="text/javascript" src="scripts/platformOverrides.js"></script>
     <script type="text/javascript" src="scripts/model/position.js"></script>
     <script type="text/javascript" src="scripts/index.js"></script>
@@ -133,6 +149,5 @@
     <script type="text/javascript" src="scripts/model/player.js"></script>
     <script type="text/javascript" src="scripts/model/database.js"></script>
     <script type="text/javascript" src="scripts/model/app.js"></script>
-</body>
 </body>
 </html>

@@ -111,4 +111,5 @@
   <plugin name="cordova-plugin-compat" version="1.0.0" />
   <plugin name="cordova-plugin-device-orientation" version="1.0.4-dev" src="https://github.com/apache/cordova-plugin-device-orientation" />
   <plugin name="cordova-plugin-dialogs" version="1.2.1" />
+  <plugin name="cordova-plugin-globalization" version="1.0.3" />
 </widget>

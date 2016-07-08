@@ -22,19 +22,20 @@ Round.prototype = {
     },
     moveToNext: function () {
         this.hole_number += 1;
+        this.end = new Date();
         this.Save();
     },
     moveToPrev: function () {
         this.hole_number = Math.max(1, this.hole_number - 1);
         this.Save();
     },
-    addScore: function (player, throws) {
-        var path = this.layout.getPathByNumber(this.hole_number);
-        if (path) {
-            if (!this.scores[player.email]) {
-                this.scores[player.email] = {};
-                for (var i = 1; i < this.hole_number; i++) {
-                    var p = this.layout.getPathByNumber(i);
+    addScore: function (score) {
+        var __self__ = this;
+        var wg = new WaitGroup(function (player, path, layout) {
+            if (!__self__.scores[player.email]) {
+                __self__.scores[player.email] = {};
+                for (var i = 1; i < __self__.hole_number; i++) {
+                    var p = layout.getPathByNumber(i);
                     if (p) {
                         this.scores[player.email][p.rowid] = new Score(this, player, path, path.par);
                     }
@@ -45,6 +46,36 @@ Round.prototype = {
             } else {
                 this.scores[player.email][path.rowid].throws = throws;
             }
+        }, [null, null, null]);
+        
+        wg.Add(3);
+
+        var wgPath = new WaitGroup(function (path) {
+            Path.WithLayout(function (layout) {
+                wg.SetParam(0, layout);
+                wg.Done();
+            });
+        }, [null]);
+
+        wgPath.Add(1);
+
+        score.WithPlayer(function (player) {
+            wg.SetParam(0, player);
+            wg.Done();
+        });
+
+        score.withPath(function (path) {
+            wg.SetParam(1, path);
+            wg.Done();
+            wgPath.SetParam(0, path);
+            wgPath.Done();
+        });
+    },
+    addThrows: function (player, throws) {
+        var path = this.layout.getPathByNumber(this.hole_number);
+        var score = new Score(this, player, path, path.par);
+        if (path) {
+            this.addScore(score);
         }
     },
     addPlayer: function (player) {
@@ -67,11 +98,44 @@ Round.prototype = {
     getData: function () {
         return {
             "start": this.start,
-            "layout": this.layout.rowid,
+            "layout": this.layout,
             "hole_number": this.hole_number,
             "finished": this.finished,
         }
     },
+    WithLayout: function (callback) {
+        Model.WithOne(Layout, this.layout, callback);
+    },
+    WithScore: function (callback) {
+        var __self__ = this;
+        Model.WithEach(Score, function (score) {
+            var wg = new WaitGroup(function (player, path) {
+                __self__.scores[];
+                callback();
+            }, [null, null]);
+            wg.Add(2);
+            score.WithPlayer(function (player) {
+                wg.SetParam(0, player);
+                wg.Done();
+            });
+            score.WithPath(function (path) {
+                wg.SetParam(1, path);
+                wg.Done();
+            });
+            __self__.scores
+        },
+        { round: this.rowid }, function (scores) {
+        });
+    },
+
+    WithEachPlayer: function (callback) {
+        var players = Array();
+        Model.LoadEach(Score, function (score) {
+            score.WithPlayer(function (player) {
+            });
+        }, { round: this.rowid });
+    },
+
     playerScoreList: function (player) {
         var scores = new Array();
         if (!this.scores[player.email]) {
@@ -96,38 +160,10 @@ Round.prototype = {
     }
 }
 
-Round.WithAll = function (callback) {
-
-    // not ready yet!
-    var courses = Array();
-
-    App.db.readTransaction(
-        function (tx) {
-            tx.executeSql(
-                "SELECT rowid, * FROM round ORDER BY rowid DESC;",
-                [],
-                function (tx, resultSet) {
-                    for (var k = 0; k < resultSet.rows.length; k++) {
-                        var item = new Round();
-                        item.rowid = resultSet.rows.item(k).rowid;
-                        item.hole_number = resultSet.rows.item(k).hole_number;
-                        item.start = resultSet.rows.item(k).start;
-                        item.end = resultSet.rows.item(k).end;
-                        // item.layout = Layout.
-                        item.Load(tx);
-                        courses.push(item);
-                    }
-                },
-                function (tx, error) {
-                    Panic(error.message);
-                }
-            );
-        }, function (error) {
-            Panic(error.message);
-        }, function () {
-            callback(courses);
-        }
-    );
+Round.WithEach = function (callback) {
+    Model.WithEach(Round, function (round) {
+        callback(round);
+    });
 }
 
 function Score(round, player, path, throws) {
@@ -143,13 +179,22 @@ Score.prototype = {
     },
     getData: function () {
         return {
-            "round": this.round.rowid,
-            "player": this.player.rowid,
-            "path": this.path.rowid,
+            "round": this.round,
+            "player": this.player,
+            "path": this.path,
             "throws": this.throws,
         }
     },
     tableName: function() {
         return "score";
+    },
+    WithPlayer: function (callback) {
+        Model.WithOne(Player, this.player, callback);
+    },
+    WithPath: function (callback) {
+        Model.WithOne(Path, this.path, callback);
+    },
+    WithRound: function (callback) {
+        Model.WithOne(Round, this.round, callback);
     }
 }
