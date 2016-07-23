@@ -36,6 +36,9 @@ Course.prototype = {
     WithEachLayout: function (callback) {
         Model.WithEach(Layout, callback, { course: this.rowid });
     },
+    WithLayouts: function (callback) {
+        Model.WithAll(Layout, callback, { course: this.rowid });
+    },
 
     Save: function (callback) {
         Model.Save(this, callback);
@@ -258,6 +261,9 @@ Path.prototype = {
     },
     WithTee: function (callback) {
         Model.WithOne(Tee, this.tee, callback);
+    },
+    WithLayout: function (callback) {
+        Model.WithOne(Layout, this.layout, callback);
     },
     WithBasket: function (callback) {
         Model.WithOne(Basket, this.basket, callback);

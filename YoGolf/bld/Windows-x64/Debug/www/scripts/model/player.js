@@ -28,33 +28,16 @@ Player.LoadAll = function (callback) {
 }
 
 Player.prototype = {
-    Save: function (callback) {
-        var __self__ = this;
-        callback = callback || function () { }
-        if (this.rowid == null) {
-            App.db.executeSql(
-                "INSERT INTO player (name, email) VALUES (?, ?);",
-                [this.name, this.email],
-                function (resultSet) {
-                    __self__.rowid = resultSet.insertId;
-                    callback(__self__);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
-        } else {
-            App.db.executeSql(
-                "UPDATE player SET name = ?, email = ? WHERE rowid = ?;",
-                [this.name, this.email, this.rowid],
-                function (resultSet) {
-                    console.log(resultSet);
-                    callback(__self__);
-                },
-                function (error) {
-                    Panic(error.message);
-                }
-            );
+    tableName: function () {
+        return 'player';
+    },
+    getData: function () {
+        return {
+            "name": this.name,
+            "email": this.email,
         }
+    },
+    Save: function (callback) {
+        Model.Save(this, callback);
     }
 }

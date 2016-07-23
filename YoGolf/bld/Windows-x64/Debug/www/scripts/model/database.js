@@ -285,12 +285,15 @@ function Model(db) {
             params,
             function (resultSetOrTx, maybeResultset) {
                 var resultSet = maybeResultset || resultSetOrTx;
+                if (resultSet.rows.length == 0) {
+                    finalCallback([]);
+                }
                 wg.Add(resultSet.rows.length);
                 for (var k = 0; k < resultSet.rows.length; k++) {
                     __self__.Fill(model, resultSet.rows.item(k), function (item) {
                         items.push(item);
-                        wg.Done();
                         callback(item);
+                        wg.Done();
                     });
                 }
             },

@@ -42,9 +42,9 @@ Round.prototype = {
                 }
             }
             if (!this.scores[player.email][path.rowid]) {
-                this.scores[player.email][path.rowid] = new Score(this, player, path, throws);
+                this.scores[player.email][path.rowid] = score;
             } else {
-                this.scores[player.email][path.rowid].throws = throws;
+                this.scores[player.email][path.rowid].throws = score.throws;
             }
         }, [null, null, null]);
         
@@ -71,9 +71,10 @@ Round.prototype = {
             wgPath.Done();
         });
     },
-    addThrows: function (player, throws) {
+    addThrows: function (player, throws, ob_count) {
         var path = this.layout.getPathByNumber(this.hole_number);
-        var score = new Score(this, player, path, path.par);
+        var score = new Score(this.rowid, player, path, path.par);
+        score.ob_count = ob_count;
         if (path) {
             this.addScore(score);
         }
@@ -85,7 +86,7 @@ Round.prototype = {
         this.scores[player.email] = {};
         var round = this;
         $.each(this.layout.paths, function (k, path) {
-            round.scores[player.email][path.rowid] = new Score(round, player, path, path.par);
+            round.scores[player.email][path.rowid] = new Score(round.rowid, player, path, path.par);
         });
     },
     players: function () {
@@ -110,8 +111,7 @@ Round.prototype = {
         var __self__ = this;
         Model.WithEach(Score, function (score) {
             var wg = new WaitGroup(function (player, path) {
-                __self__.scores[];
-                callback();
+                Panic("Not implemented!");
             }, [null, null]);
             wg.Add(2);
             score.WithPlayer(function (player) {
@@ -129,11 +129,30 @@ Round.prototype = {
     },
 
     WithEachPlayer: function (callback) {
-        var players = Array();
-        Model.LoadEach(Score, function (score) {
+        var playerIds = Array();
+        Model.WithEach(Score, function (score) {
             score.WithPlayer(function (player) {
+                if (playerIds.indexOf(player.rowid) < 0) {
+                    playerIds.push(player.rowid);
+                    callback(player);
+                }
             });
-        }, { round: this.rowid });
+        });
+    },
+
+    WithPlayers: function (callback) {
+        var playerIds = Array();
+        var players = Array();
+        Model.WithEach(Score, function (score) {
+            score.WithPlayer(function (player) {
+                if (playerIds.indexOf(player.rowid) < 0) {
+                    playerIds.push(player.rowid);
+                    players.push(player);
+                }
+            });
+        }, { round: this.rowid }, function (scores) {
+            callback(players);
+        });
     },
 
     playerScoreList: function (player) {
@@ -169,8 +188,9 @@ Round.WithEach = function (callback) {
 function Score(round, player, path, throws) {
     this.round = round;
     this.player = player;
-    this.throws = throws || path.par;
+    this.throws = throws || (path ? path.par : null);
     this.path = path;
+    this.ob_count = 0;
 }
 
 Score.prototype = {
@@ -183,6 +203,7 @@ Score.prototype = {
             "player": this.player,
             "path": this.path,
             "throws": this.throws,
+            "ob_count": this.ob_count,
         }
     },
     tableName: function() {

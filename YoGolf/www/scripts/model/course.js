@@ -36,6 +36,9 @@ Course.prototype = {
     WithEachLayout: function (callback) {
         Model.WithEach(Layout, callback, { course: this.rowid });
     },
+    WithLayouts: function (callback) {
+        Model.WithAll(Layout, callback, { course: this.rowid });
+    },
 
     Save: function (callback) {
         Model.Save(this, callback);
