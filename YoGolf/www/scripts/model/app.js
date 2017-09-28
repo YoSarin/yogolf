@@ -71,19 +71,17 @@ YoGolf.prototype = {
         );
     },
     watchLocation: function (backoff) {
-        var __self__ = this;
-        var options = { enableHighAccuracy: true, timeout: 5000
-        };
+        var options = { enableHighAccuracy: true, timeout: 5000 };
         var backoff = Math.min((backoff || 0.5) * 2, 64);
         navigator.geolocation.getCurrentPosition(function (position) {
-            __self__.position = position;
+            this.position = position;
             View.refreshDistance(position);
-            setTimeout(__self__.watchLocation, 250);
-        }, function (error) {
+            setTimeout(this.watchLocation, 250);
+        }.bind(this), function (error) {
             console.log(error);
-            __self__.position = null;
-            setTimeout(function () { __self__.watchLocation(backoff); }, backoff * 250);
-        }, options);
+            this.position = null;
+            setTimeout(this.watchLocation.bind(this, backoff), backoff * 250);
+        }.bind(this), options);
     },
     dbCleanup: function () {
         this.db.sqlBatch([

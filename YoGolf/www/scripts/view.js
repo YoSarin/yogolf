@@ -100,24 +100,36 @@ View.Layout = function (layout) {
     App.AddToHistory(View.Layout, arguments);
     $(':mobile-pagecontainer').pagecontainer('change', $('#layout'));
     $("#layout .content").html("");
-    $("#layout .content").append($("<h2>").text(layout.course.name + ": " + layout.name));
+    $("#layout .content").append("<h2>");
+
+    layout.WithCourse(function (course) {
+        $("#layout .content h2").text(course.name + ": " + layout.name);
+    });
     $("#layout .content").append($('<ul class="paths">'));
     $.each(layout.paths, function (k, path) {
-        $("#layout .content ul.paths").append(
-            $("<li>")
-                .text('[' + path.number + '] ' + path.tee.name + ' ➟ ' + path.basket.name + ':  par ' + path.par + ' | ' + path.distance().toFixed(0) + ' meters | ')
-                .append($('<span class="showCompass showDistance" coords="' + path.tee.coord().toString() + '"></span>'))
-        );
+        path.WithDistance(function (distance) {
+            path.WithTee(function (tee) {
+                path.WithBasket(function (basket) {
+                    var row = $("<li>")
+                        .text('[' + path.number + '] ' + tee.name + ' ➟ ' + basket.name + ':  par ' + path.par + ' | ' + distance.toFixed(0) + ' meters | ');
+                    $("#layout .content ul.paths").append(row);
+                    row.append($('<span class="showCompass showDistance" coords="' + tee.coord().toString() + '"></span>'));
+                });
+            });
+        });
     });
+    
     View.Enrich($("#layout"));
 }
 
 View.StartRound = function (layout) {
     var round = new Round(layout);
-    round.addPlayer(App.playerByEmail('martin@yosarin.net'));
-    round.addPlayer(App.playerByEmail('lidalejsal@gmail.com'));
-    round.addPlayer(App.playerByEmail('pzaloha@volny.cz'));
-    View.Round(round, round.hole_number);
+    round.Save(function () {
+        round.addPlayer(App.playerByEmail('martin@yosarin.net'));
+        round.addPlayer(App.playerByEmail('lidalejsal@gmail.com'));
+        round.addPlayer(App.playerByEmail('pzaloha@volny.cz'));
+        View.Round(round, round.hole_number);
+    });
 }
 
 View.Round = function (round, hole_number) { // passing hole number separately, to be able to track history while walking through layout
@@ -125,14 +137,14 @@ View.Round = function (round, hole_number) { // passing hole number separately, 
     $(':mobile-pagecontainer').pagecontainer('change', $('#round'));
     $("#round .content").html("");
     
-    $("#round .content")
-        .append($('<table class="path">'))
-        .append($('<table class="players">'));
     round.WithLayout(function (layout) {
         layout.WithPaths(function (paths) {
             var path = layout.getPathByNumber(hole_number);
             if (path) {
-                var wg = WaitGroup(function (tee, basket, distance) {
+                $("#round .content")
+                    .append($('<table class="path">'))
+                    .append($('<table class="players">'));
+                var wg = new WaitGroup(function (tee, basket, distance) {
 
                     $("#round h4.footer")
                         .text("Tee: ")
@@ -142,26 +154,26 @@ View.Round = function (round, hole_number) { // passing hole number separately, 
 
                     $("#round .content table.path")
                         .append(
-                            $("<tr>")
-                                .append($("<th>").text("#"))
-                                .append($("<th>").text("Tee"))
-                                .append($("<th>").text("Basket"))
-                                .append($("<th>").text("Par"))
-                                .append($("<th>").text("Length"))
+                        $("<tr>")
+                            .append($("<th>").text("#"))
+                            .append($("<th>").text("Tee"))
+                            .append($("<th>").text("Basket"))
+                            .append($("<th>").text("Par"))
+                            .append($("<th>").text("Length"))
                         )
                         .append(
-                            $("<tr>")
-                                .append($("<td>").text(hole_number + '/' + layout.paths.length))
-                                .append($("<td>").text(tee.name))
-                                .append($("<td>").text(basket.name))
-                                .append($("<td>").text(path.par))
-                                .append($("<td>").text(distance.toFixed(0)))
+                        $("<tr>")
+                            .append($("<td>").text(hole_number + '/' + layout.paths.length))
+                            .append($("<td>").text(tee.name))
+                            .append($("<td>").text(basket.name))
+                            .append($("<td>").text(path.par))
+                            .append($("<td>").text(distance.toFixed(0)))
                         )
                         .append(
-                            $('<tr>')
-                                .append($('<td colspan="5">').text(path.description))
+                        $('<tr>')
+                            .append($('<td colspan="5">').text(path.description ? path.description : ""))
                         );
-                }, [null, null, null])
+                }, [null, null, null]);
 
                 wg.Add(3);
 
@@ -179,21 +191,38 @@ View.Round = function (round, hole_number) { // passing hole number separately, 
                     wg.SetParam(2, distance);
                     wg.Done();
                 });
-                
-                round.WithEachPlayer(function (player) {
-                    round.WithPlayerScore(player, function (absoluteScore, relativeScore) {
-                        var row = $('<tr class="player">')
-                            .append($('<td>').text(player.name))
-                            .append($('<td>').text((relativeScore > 0 ? '+' : '') + relativeScore))
-                            .append($('<td>').append($('<span class="green minus button">').text("-")))
-                            .append($('<td>').append($('<span class="score">').text(absoluteScore)))
-                            .append($('<td>').append($('<span class="red plus button">').text("+")))
-                            .append($('<td>').append($('<span class="padded red ob button">').text("OB")))
-                            .data("player", player);
-                        View.scoreButtons(row);
-                        $('#round table.players').append(row);
-                    });
-                });
+
+                $('#round table.players').append(
+                    $('<tr class="player">')
+                    .append($('<th>').text("hráč"))
+                    .append($('<th>').text("± celkem"))
+                    .append($('<th>').text("hody na jamce"))
+                    .append($('<td>').text("OB"))
+                );
+
+                $.each(round.scores, function (email, scores) {
+                    var current = scores[path.rowid];
+                    var relative = 0;
+                    $.each(scores, function (index, score) {
+                        var idx = parseInt(index);
+                        if (idx <= path.rowid) {
+                            relative += score.relative();
+                        }
+                    })
+                    var row = $('<tr class="player">')
+                        .append($('<td>').text(current.player.name))
+                        .append($('<td class="relative">').text((relative > 0 ? '+' : '') + relative))
+                        .append($('<td>')
+                            .append($('<span class="green minus button at_left">').text("-"))
+                            .append($('<span class="score">').text(current.throws))
+                            .append($('<span class="red plus button">').text("+"))
+                        )
+                        .append($('<td>').append($('<span class="padded red ob button">').text("OB")))
+                        .data("player", current.player)
+                        .data("score", current);
+                    View.scoreButtons(row);
+                    $('#round table.players').append(row);
+                })
 
                 round.WithLayout(function (layout) {
                     layout.WithCourse(function (course) {
@@ -213,10 +242,7 @@ View.Round = function (round, hole_number) { // passing hole number separately, 
                 $("#round div.footer").append($('<div class="blue next button">⤇</div>'));
                 
                 $("#round .button.next").click(function (event) {
-                    $('#round tr.player').each(function (key, row) {
-                        var player = $(row).data("player");
-                        round.addThrows(player, parseInt($(row).find('.score').text()));
-                    });
+                    round.Save();
                     round.moveToNext();
                     View.Round(round, round.hole_number);
                 });
@@ -291,11 +317,10 @@ View.Rounds = function () {
                 );
         }, [null, null, null]);
 
-        wg.Add(3);
+        wg.Add(2);
 
         round.WithLayout(function (layout) {
             wg.SetParam(0, layout);
-            wg.Done();
             layout.WithCourse(function (course) {
                 wg.SetParam(1, course);
                 wg.Done();
@@ -313,6 +338,7 @@ View.Rounds = function () {
 View.Enrich = function (page) {
     $(page).find(".button").click(function (ev) {
         $(this).addClass("clicked");
+        setTimeout(function () { $(this).removeClass("clicked"); }.bind(this), 1000)
     });
     $(page).find(".showCompass").each(function (k, item) {
         $(item).append($("#templates .compass").clone());
@@ -357,7 +383,7 @@ View.refreshHeading = function (position, heading) {
         var direction = Math.round(heading.magneticHeading - c.directionTo(itemCoord)) % 360;
         View.HeadingArrow(direction, $(item).find(".compass"));
     });
-    var cl = $('.require_HEADING').attr('class').replace(/(\s|^)hidden(\s|$)/, "$1$2");
+    var cl = $('.require_HEADING').removeClass('hidden');
     $('.require_HEADING').attr('class', cl);
 }
 
@@ -374,7 +400,7 @@ View.refreshDistance = function (position) {
             $(item).find(".distance").text(distance + " m (± " + position.coords.accuracy + ")");
         }
     });
-    var cl = $('.require_GPS').attr('class').replace(/(\s|^)hidden(\s|$)/, "$1$2");
+    var cl = $('.require_GPS').removeClass('hidden');
     $('.require_GPS').attr('class', cl);
 }
 
@@ -390,15 +416,26 @@ View.HeadingArrow = function (direction, svg) {
 
 View.scoreButtons = function (elem) {
     elem.find(".button.plus").click(function (event) {
+        var score = $(this).closest("tr").data("score");
         var el = $(this).closest("tr").find(".score");
+        score.throws += 1;
+        score.Save();
         el.text(parseInt(el.text()) + 1);
+        var relative = $(this).closest("tr").find(".relative");
+        relative.text(parseInt(relative.text()) + 1);
     });
     elem.find(".button.minus").click(function (event) {
+        var score = $(this).closest("tr").data("score");
         var el = $(this).closest("tr").find(".score");
+        score.throws -= 1;
+        score.Save();
         el.text(parseInt(el.text()) - 1);
+        var relative = $(this).closest("tr").find(".relative");
+        relative.text(parseInt(relative.text()) - 1);
     });
     elem.find(".button.ob").multi_click(
         function (event) {
+            var score = $(this).closest("tr").data("score");
             var el = $(this).closest("tr").find(".score");
             el.text(parseInt(el.text()) + 1);
             if (el.hasClass("ob2")) {
@@ -408,8 +445,14 @@ View.scoreButtons = function (elem) {
             } else {
                 el.addClass("ob");
             }
+            score.ob_count += 1;
+            score.Save();
+
+            var relative = $(this).closest("tr").find(".relative");
+            relative.text(parseInt(relative.text()) + 1);
         },
         function (event) {
+            var score = $(this).closest("tr").data("score");
             var el = $(this).closest("tr").find(".score");
             el.text(parseInt(el.text()) - 1);
             if (el.hasClass("ob3")) {
@@ -419,6 +462,11 @@ View.scoreButtons = function (elem) {
             } else {
                 el.removeClass("ob");
             }
+            score.ob_count -= 1;
+            score.Save();
+
+            var relative = $(this).closest("tr").find(".relative");
+            relative.text(parseInt(relative.text()) - 1);
         },
         function (event) {
 

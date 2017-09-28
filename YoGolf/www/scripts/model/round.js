@@ -17,7 +17,7 @@ Round.prototype = {
                 });
             });
             callback(round);
-        }
+        }.bind(this);
         Model.Save(this, enrichedCallback);
     },
     moveToNext: function () {
@@ -31,46 +31,36 @@ Round.prototype = {
     },
     addScore: function (score) {
         var __self__ = this;
-        var wg = new WaitGroup(function (player, path, layout) {
+        var wg = new WaitGroup(function (player, layout) {
             if (!__self__.scores[player.email]) {
                 __self__.scores[player.email] = {};
                 for (var i = 1; i < __self__.hole_number; i++) {
                     var p = layout.getPathByNumber(i);
                     if (p) {
-                        this.scores[player.email][p.rowid] = new Score(this, player, path, path.par);
+                        this.scores[player.email][p.rowid] = new Score(this, player, score.path, path.par);
                     }
                 }
             }
-            if (!this.scores[player.email][path.rowid]) {
-                this.scores[player.email][path.rowid] = score;
+            if (!this.scores[player.email][score.path.rowid]) {
+                this.scores[player.email][score.path.rowid] = score;
             } else {
-                this.scores[player.email][path.rowid].throws = score.throws;
+                this.scores[player.email][score.path.rowid].throws = score.throws;
             }
-        }, [null, null, null]);
+        }, [null, null]);
         
-        wg.Add(3);
-
-        var wgPath = new WaitGroup(function (path) {
-            Path.WithLayout(function (layout) {
-                wg.SetParam(0, layout);
-                wg.Done();
-            });
-        }, [null]);
-
-        wgPath.Add(1);
-
+        wg.Add(2);
+        
+        score.path.WithLayout(function (layout) {
+            wg.SetParam(1, layout);
+            wg.Done();
+        });
+        
         score.WithPlayer(function (player) {
             wg.SetParam(0, player);
             wg.Done();
         });
-
-        score.withPath(function (path) {
-            wg.SetParam(1, path);
-            wg.Done();
-            wgPath.SetParam(0, path);
-            wgPath.Done();
-        });
     },
+
     addThrows: function (player, throws, ob_count) {
         var path = this.layout.getPathByNumber(this.hole_number);
         var score = new Score(this.rowid, player, path, path.par);
@@ -99,13 +89,13 @@ Round.prototype = {
     getData: function () {
         return {
             "start": this.start,
-            "layout": this.layout,
+            "layout": this.layout.rowid,
             "hole_number": this.hole_number,
             "finished": this.finished,
         }
     },
     WithLayout: function (callback) {
-        Model.WithOne(Layout, this.layout, callback);
+        callback(this.layout);
     },
     WithScore: function (callback) {
         var __self__ = this;
@@ -200,14 +190,17 @@ Score.prototype = {
     getData: function () {
         return {
             "round": this.round,
-            "player": this.player,
-            "path": this.path,
+            "player": this.player.rowid,
+            "path": this.path.rowid,
             "throws": this.throws,
             "ob_count": this.ob_count,
         }
     },
     tableName: function() {
         return "score";
+    },
+    relative: function () {
+        return (this.throws + this.ob_count) - this.path.par;
     },
     WithPlayer: function (callback) {
         Model.WithOne(Player, this.player, callback);

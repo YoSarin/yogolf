@@ -51,7 +51,7 @@
                 "CREATE TABLE IF NOT EXISTS app_info(version int, updated datetime DEFAULT CURRENT_TIMESTAMP);",
 
                 "CREATE TABLE IF NOT EXISTS round (gid int default null, layout int, start datetime, end datetime DEFAULT CURRENT_TIMESTAMP, hole_number int, finished boolean default false)",
-                "CREATE TABLE IF NOT EXISTS score (gid int default null, player int, throws int, round int, path int)",
+                "CREATE TABLE IF NOT EXISTS score (gid int default null, player int, throws int, round int, path int, ob_count int)",
 
                 "INSERT INTO player (name, email) VALUES ('Martin', 'martin@yosarin.net')",
                 "INSERT INTO player (name, email) VALUES ('Lída', 'lidalejsal@gmail.com')",
@@ -223,10 +223,11 @@ function Model(db) {
 
         var questionmarks = columns.map(function () { return '?'; });
         var values = columns.map(function (value) { return data[value] });
+        var query = "INSERT INTO " + item.tableName() + " (" + columns.join(", ") + ") VALUES (" + questionmarks.join(", ") + ");";
 
         if (item.rowid == null) {
             this.DB().executeSql(
-                "INSERT INTO " + item.tableName() + " (" + columns.join(", ") + ") VALUES (" + questionmarks.join(", ") + ");",
+                query,
                 values,
                 function (resultSet) {
                     item.rowid = resultSet.insertId;
@@ -306,16 +307,20 @@ function Model(db) {
 
     this.WithOne = function (model, rowid, callback) {
         var tmp = new model();
-        var __self__ = this;
+        var query = 'SELECT rowid, * FROM ' + tmp.tableName() + ' WHERE rowid = ?';
+        var params = [rowid];
+        console.log(query, params);
         this.DB().executeSql(
-            'SELECT rowid, * FROM ' + tmp.tableName() + ' WHERE rowid = ?',
-            [rowid],
-            function (resultSet) {
+            query,
+            params,
+            function (resultSetOrTx, maybeResultset) {
+                var resultSet = maybeResultset || resultSetOrTx;
                 for (var k = 0; k < resultSet.rows.length; k++) {
-                    __self__.Fill(model, resultSet.rows.item(k), callback);
+                    this.Fill(model, resultSet.rows.item(k), callback);
                 }
-            },
-            function (error) {
+            }.bind(this),
+            function (errorOrTx, maybeError) {
+                var error = maybeError || errorOrTx;
                 Panic(error.message);
             }
         )
@@ -370,7 +375,8 @@ Model.WithEach = function (model, callback, filter) {
 }
 
 Model.WithOne = function (model, rowid, callback) {
-    Model.WithDb(App.db).WithOne(model, rowid, callback);
+    var m = Model.WithDb(App.db);
+    m.WithOne(model, rowid, callback);
 }
 
 Model.Fill = function (model, row, callback) {

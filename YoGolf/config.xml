@@ -7,7 +7,7 @@
   <access origin="*" />
   <vs:features />
   <preference name="SplashScreen" value="screen" />
-  <preference name="windows-target-version" value="8.1" />
+  <preference name="windows-target-version" value="10.0" />
   <!-- Support for Cordova 5.0.0 plugin system -->
   <plugin name="cordova-plugin-whitelist" version="1" />
   <allow-intent href="http://*/*" />
@@ -112,4 +112,8 @@
   <plugin name="cordova-plugin-device-orientation" version="1.0.4-dev" src="https://github.com/apache/cordova-plugin-device-orientation" />
   <plugin name="cordova-plugin-dialogs" version="1.2.1" />
   <plugin name="cordova-plugin-globalization" version="1.0.3" />
+  <vs:toolsetVersion>6.3.1</vs:toolsetVersion>
+  <engine name="android" spec="5.2.1" />
+  <engine name="ios" spec="4.2.0" />
+  <engine name="windows" spec="4.4.2" />
 </widget>
